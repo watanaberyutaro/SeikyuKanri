@@ -295,6 +295,7 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
                 削除
               </Button>
             </div>
+          </div>
           ))}
 
           <div className="border-t pt-4 space-y-2">

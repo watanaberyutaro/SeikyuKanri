@@ -76,7 +76,7 @@ async function getBillBalances(
   }
 
   // 各請求書の支払済み額を取得
-  const billIds = bills.map((b) => b.id)
+  const billIds = bills.map((b: any) => b.id)
   const { data: allocations } = await supabase
     .from('ap_allocations')
     .select('bill_id, allocated_amount')
@@ -95,7 +95,7 @@ async function getBillBalances(
   // 残高を計算
   const today = new Date()
   const balances: BillBalance[] = bills
-    .map((bill) => {
+    .map((bill: any) => {
       const totalAmount = Number(bill.total_amount)
       const allocatedAmount = allocationMap.get(bill.id) || 0
       const balance = totalAmount - allocatedAmount
@@ -138,7 +138,7 @@ async function getBillBalances(
         status: bill.status,
       } as BillBalance
     })
-    .filter((b): b is BillBalance => b !== null)
+    .filter((b: any): b is BillBalance => b !== null)
 
   return balances
 }

@@ -5,9 +5,10 @@ import { UpdatePeriodInput } from '@/types/accounting'
 // PUT /api/periods/[id] - 会計期間更新
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { id } = await params
 
   // 認証チェック
   const {
@@ -28,8 +29,6 @@ export async function PUT(
   if (!profile?.tenant_id) {
     return NextResponse.json({ error: 'テナント情報が見つかりません' }, { status: 400 })
   }
-
-  const id = params.id
   const body: UpdatePeriodInput = await request.json()
 
   // 期間を取得して状態を確認
@@ -84,9 +83,10 @@ export async function PUT(
 // DELETE /api/periods/[id] - 会計期間削除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { id } = await params
 
   // 認証チェック
   const {
@@ -107,8 +107,6 @@ export async function DELETE(
   if (!profile?.tenant_id) {
     return NextResponse.json({ error: 'テナント情報が見つかりません' }, { status: 400 })
   }
-
-  const id = params.id
 
   // 仕訳での使用チェック
   const { data: usedInJournals } = await supabase

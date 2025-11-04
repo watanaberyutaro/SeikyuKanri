@@ -69,7 +69,7 @@ async function getInvoiceBalances(
   }
 
   // 各請求書の入金済み額を取得
-  const invoiceIds = invoices.map((inv) => inv.id)
+  const invoiceIds = invoices.map((inv: any) => inv.id)
   const { data: allocations } = await supabase
     .from('ar_payment_allocations')
     .select('invoice_id, allocated_amount')
@@ -88,7 +88,7 @@ async function getInvoiceBalances(
   // 残高を計算
   const today = new Date()
   const balances: ARInvoiceBalance[] = invoices
-    .map((invoice) => {
+    .map((invoice: any) => {
       const totalAmount = Number(invoice.total_amount)
       const allocatedAmount = allocationMap.get(invoice.id) || 0
       const balance = totalAmount - allocatedAmount
@@ -129,7 +129,7 @@ async function getInvoiceBalances(
         aging_bucket: agingBucket,
       } as ARInvoiceBalance
     })
-    .filter((b): b is ARInvoiceBalance => b !== null)
+    .filter((b: any): b is ARInvoiceBalance => b !== null)
 
   return balances
 }

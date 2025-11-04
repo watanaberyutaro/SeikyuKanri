@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
   }
 
   for (const invoice of overdueInvoices || []) {
-    suggestions[invoice.aging_bucket].push(invoice.invoice_id)
+    suggestions[invoice.aging_bucket as keyof typeof suggestions].push(invoice.invoice_id)
   }
 
   // ログに記録（実際の送信は手動またはUIから実行）

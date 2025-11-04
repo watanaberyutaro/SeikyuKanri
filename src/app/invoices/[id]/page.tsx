@@ -106,8 +106,8 @@ export default async function InvoiceDetailPage({ params }: { params: Promise<{ 
         <CardHeader>
           <div className="flex justify-between items-start">
             <CardTitle>基本情報</CardTitle>
-            <Badge className={statusColors[invoice.status]}>
-              {statusLabels[invoice.status]}
+            <Badge className={statusColors[invoice.status as keyof typeof statusColors]}>
+              {statusLabels[invoice.status as keyof typeof statusLabels]}
             </Badge>
           </div>
         </CardHeader>

@@ -4,9 +4,10 @@ import { createClient } from '@/lib/supabase/server'
 // GET /api/journals/[id] - 仕訳詳細取得
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { id } = await params
 
   // 認証チェック
   const {
@@ -27,8 +28,6 @@ export async function GET(
   if (!profile?.tenant_id) {
     return NextResponse.json({ error: 'テナント情報が見つかりません' }, { status: 400 })
   }
-
-  const { id } = params
 
   // 仕訳を取得
   const { data: journal, error } = await supabase
@@ -59,9 +58,10 @@ export async function GET(
 // DELETE /api/journals/[id] - 仕訳削除
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const supabase = await createClient()
+  const { id } = await params
 
   // 認証チェック
   const {
@@ -82,8 +82,6 @@ export async function DELETE(
   if (!profile?.tenant_id) {
     return NextResponse.json({ error: 'テナント情報が見つかりません' }, { status: 400 })
   }
-
-  const { id } = params
 
   // 仕訳を取得して期間ロックをチェック
   const { data: journal } = await supabase

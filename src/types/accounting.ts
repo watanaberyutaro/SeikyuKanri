@@ -123,7 +123,7 @@ export interface UpdatePeriodInput {
 }
 
 // ==================== 仕訳 ====================
-export type JournalSourceType = 'invoice' | 'quote' | 'manual' | null
+export type JournalSourceType = 'invoice' | 'quote' | 'manual' | 'bank_transaction' | 'fixed_asset' | null
 
 export interface Journal {
   id: string
@@ -165,6 +165,7 @@ export interface CreateJournalInput {
   source?: string | null
   source_type?: JournalSourceType
   source_id?: string | null
+  is_approved?: boolean
   lines: CreateJournalLineInput[]
 }
 

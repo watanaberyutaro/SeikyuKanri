@@ -18,7 +18,11 @@
       "Bash(00005_insert_template_data.sql)",
       "Bash(tree:*)",
       "Bash(npx shadcn@latest add:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git remote add:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

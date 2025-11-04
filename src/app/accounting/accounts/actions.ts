@@ -86,7 +86,7 @@ async function importAccountsInternal(
 
     // 税率をインポート
     console.log('💰 税率をインポート中...')
-    const taxRates = taxRateTemplates.map((tr) => ({
+    const taxRates = taxRateTemplates.map((tr: any) => ({
       tenant_id: tenantId,
       user_id: userId,
       name: tr.name,
