@@ -2,13 +2,6 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "framework": "nextjs",
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "@supabase_url",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "@supabase_anon_key",
-    "SUPABASE_SERVICE_ROLE_KEY": "@supabase_service_role_key",
-    "RESEND_API_KEY": "@resend_api_key",
-    "NEXT_PUBLIC_APP_URL": "@app_url"
-  },
   "crons": [
     {
       "path": "/api/ar/dunning/daily",
