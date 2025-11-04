@@ -1,0 +1,441 @@
+{
+  "version": "1.0.0",
+  "name": "小規模法人向け標準勘定科目",
+  "description": "日本の小規模法人向けの基本的な勘定科目体系です。",
+  "tax_rates": [
+    {
+      "name": "標準税率10%",
+      "rate": 10.0,
+      "category": "standard",
+      "applies_from": "2019-10-01",
+      "description": "消費税標準税率（2019年10月1日以降）"
+    },
+    {
+      "name": "軽減税率8%",
+      "rate": 8.0,
+      "category": "reduced",
+      "applies_from": "2019-10-01",
+      "description": "消費税軽減税率（食料品等）"
+    },
+    {
+      "name": "旧税率8%",
+      "rate": 8.0,
+      "category": "standard",
+      "applies_from": "2014-04-01",
+      "description": "旧消費税率（2014年4月〜2019年9月）"
+    },
+    {
+      "name": "非課税",
+      "rate": 0.0,
+      "category": "exempt",
+      "applies_from": "2000-01-01",
+      "description": "非課税取引"
+    },
+    {
+      "name": "対象外",
+      "rate": 0.0,
+      "category": "non-tax",
+      "applies_from": "2000-01-01",
+      "description": "消費税対象外"
+    }
+  ],
+  "accounts": [
+    {
+      "code": "1000",
+      "name": "資産",
+      "type": "asset",
+      "parent_code": null,
+      "tax_category": null,
+      "sort_order": 1000,
+      "description": "資産の部"
+    },
+    {
+      "code": "1100",
+      "name": "流動資産",
+      "type": "asset",
+      "parent_code": "1000",
+      "tax_category": null,
+      "sort_order": 1100
+    },
+    {
+      "code": "1101",
+      "name": "現金",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "non-tax",
+      "sort_order": 1101
+    },
+    {
+      "code": "1102",
+      "name": "普通預金",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "non-tax",
+      "sort_order": 1102
+    },
+    {
+      "code": "1103",
+      "name": "当座預金",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "non-tax",
+      "sort_order": 1103
+    },
+    {
+      "code": "1110",
+      "name": "売掛金",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "non-tax",
+      "sort_order": 1110
+    },
+    {
+      "code": "1120",
+      "name": "棚卸資産",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "standard",
+      "sort_order": 1120
+    },
+    {
+      "code": "1130",
+      "name": "前払金",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "standard",
+      "sort_order": 1130
+    },
+    {
+      "code": "1140",
+      "name": "仮払金",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": null,
+      "sort_order": 1140
+    },
+    {
+      "code": "1141",
+      "name": "仮払消費税",
+      "type": "asset",
+      "parent_code": "1100",
+      "tax_category": "non-tax",
+      "sort_order": 1141
+    },
+    {
+      "code": "1200",
+      "name": "固定資産",
+      "type": "asset",
+      "parent_code": "1000",
+      "tax_category": null,
+      "sort_order": 1200
+    },
+    {
+      "code": "1210",
+      "name": "建物",
+      "type": "asset",
+      "parent_code": "1200",
+      "tax_category": "standard",
+      "sort_order": 1210
+    },
+    {
+      "code": "1220",
+      "name": "車両運搬具",
+      "type": "asset",
+      "parent_code": "1200",
+      "tax_category": "standard",
+      "sort_order": 1220
+    },
+    {
+      "code": "1230",
+      "name": "工具器具備品",
+      "type": "asset",
+      "parent_code": "1200",
+      "tax_category": "standard",
+      "sort_order": 1230
+    },
+    {
+      "code": "1240",
+      "name": "ソフトウェア",
+      "type": "asset",
+      "parent_code": "1200",
+      "tax_category": "standard",
+      "sort_order": 1240
+    },
+    {
+      "code": "1250",
+      "name": "減価償却累計額",
+      "type": "contra",
+      "parent_code": "1200",
+      "tax_category": null,
+      "sort_order": 1250
+    },
+    {
+      "code": "2000",
+      "name": "負債",
+      "type": "liability",
+      "parent_code": null,
+      "tax_category": null,
+      "sort_order": 2000,
+      "description": "負債の部"
+    },
+    {
+      "code": "2100",
+      "name": "流動負債",
+      "type": "liability",
+      "parent_code": "2000",
+      "tax_category": null,
+      "sort_order": 2100
+    },
+    {
+      "code": "2110",
+      "name": "買掛金",
+      "type": "liability",
+      "parent_code": "2100",
+      "tax_category": "non-tax",
+      "sort_order": 2110
+    },
+    {
+      "code": "2120",
+      "name": "短期借入金",
+      "type": "liability",
+      "parent_code": "2100",
+      "tax_category": "non-tax",
+      "sort_order": 2120
+    },
+    {
+      "code": "2130",
+      "name": "未払金",
+      "type": "liability",
+      "parent_code": "2100",
+      "tax_category": "non-tax",
+      "sort_order": 2130
+    },
+    {
+      "code": "2131",
+      "name": "未払費用",
+      "type": "liability",
+      "parent_code": "2100",
+      "tax_category": "non-tax",
+      "sort_order": 2131
+    },
+    {
+      "code": "2140",
+      "name": "預り金",
+      "type": "liability",
+      "parent_code": "2100",
+      "tax_category": "non-tax",
+      "sort_order": 2140
+    },
+    {
+      "code": "2141",
+      "name": "仮受消費税",
+      "type": "liability",
+      "parent_code": "2100",
+      "tax_category": "non-tax",
+      "sort_order": 2141
+    },
+    {
+      "code": "2200",
+      "name": "固定負債",
+      "type": "liability",
+      "parent_code": "2000",
+      "tax_category": null,
+      "sort_order": 2200
+    },
+    {
+      "code": "2210",
+      "name": "長期借入金",
+      "type": "liability",
+      "parent_code": "2200",
+      "tax_category": "non-tax",
+      "sort_order": 2210
+    },
+    {
+      "code": "3000",
+      "name": "純資産",
+      "type": "equity",
+      "parent_code": null,
+      "tax_category": null,
+      "sort_order": 3000,
+      "description": "純資産の部"
+    },
+    {
+      "code": "3100",
+      "name": "資本金",
+      "type": "equity",
+      "parent_code": "3000",
+      "tax_category": "non-tax",
+      "sort_order": 3100
+    },
+    {
+      "code": "3200",
+      "name": "繰越利益剰余金",
+      "type": "equity",
+      "parent_code": "3000",
+      "tax_category": "non-tax",
+      "sort_order": 3200
+    },
+    {
+      "code": "4000",
+      "name": "収益",
+      "type": "revenue",
+      "parent_code": null,
+      "tax_category": null,
+      "sort_order": 4000,
+      "description": "収益の部"
+    },
+    {
+      "code": "4100",
+      "name": "売上高",
+      "type": "revenue",
+      "parent_code": "4000",
+      "tax_category": "standard",
+      "sort_order": 4100
+    },
+    {
+      "code": "4200",
+      "name": "受取利息",
+      "type": "revenue",
+      "parent_code": "4000",
+      "tax_category": "exempt",
+      "sort_order": 4200
+    },
+    {
+      "code": "4300",
+      "name": "雑収入",
+      "type": "revenue",
+      "parent_code": "4000",
+      "tax_category": "standard",
+      "sort_order": 4300
+    },
+    {
+      "code": "5000",
+      "name": "費用",
+      "type": "expense",
+      "parent_code": null,
+      "tax_category": null,
+      "sort_order": 5000,
+      "description": "費用の部"
+    },
+    {
+      "code": "5100",
+      "name": "売上原価",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5100
+    },
+    {
+      "code": "5200",
+      "name": "給料手当",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "non-tax",
+      "sort_order": 5200
+    },
+    {
+      "code": "5210",
+      "name": "法定福利費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "non-tax",
+      "sort_order": 5210
+    },
+    {
+      "code": "5220",
+      "name": "福利厚生費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5220
+    },
+    {
+      "code": "5300",
+      "name": "旅費交通費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5300
+    },
+    {
+      "code": "5310",
+      "name": "通信費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5310
+    },
+    {
+      "code": "5320",
+      "name": "消耗品費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5320
+    },
+    {
+      "code": "5330",
+      "name": "地代家賃",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5330
+    },
+    {
+      "code": "5340",
+      "name": "水道光熱費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5340
+    },
+    {
+      "code": "5350",
+      "name": "保険料",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "exempt",
+      "sort_order": 5350
+    },
+    {
+      "code": "5360",
+      "name": "修繕費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5360
+    },
+    {
+      "code": "5370",
+      "name": "減価償却費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "non-tax",
+      "sort_order": 5370
+    },
+    {
+      "code": "5400",
+      "name": "支払利息",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "exempt",
+      "sort_order": 5400
+    },
+    {
+      "code": "5500",
+      "name": "租税公課",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "non-tax",
+      "sort_order": 5500
+    },
+    {
+      "code": "5600",
+      "name": "雑費",
+      "type": "expense",
+      "parent_code": "5000",
+      "tax_category": "standard",
+      "sort_order": 5600
+    }
+  ]
+}

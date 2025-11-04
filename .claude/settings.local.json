@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --src-dir --import-alias \"@/*\" --no-git)",
+      "Read(//Users/watanaberyuutarou/Desktop/3125映像/myProject/**)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(npx shadcn@latest add button input form table card dialog select badge calendar dropdown-menu label textarea -y)",
+      "Bash(npm run dev:*)",
+      "Bash(cp:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)",
+      "Bash(rm:*)",
+      "Bash(kill:*)",
+      "Bash(cat:*)",
+      "Bash(curl:*)",
+      "Bash(node generate-template-data.js:*)",
+      "Bash(00005_insert_template_data.sql)",
+      "Bash(tree:*)",
+      "Bash(npx shadcn@latest add:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
