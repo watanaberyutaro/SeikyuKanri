@@ -12,29 +12,31 @@ export default async function LandingPage() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* ヘッダー */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <Receipt className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
-              請求書管理システム
+        <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <Receipt className="h-6 w-6 md:h-8 md:w-8 text-primary flex-shrink-0" />
+            <span className="text-base md:text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent leading-tight">
+              請求書管理
+              <span className="hidden sm:inline">システム</span>
             </span>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-2 md:gap-3">
             {user ? (
               <Link href="/dashboard">
-                <Button size="lg" variant="default">
-                  ダッシュボード
+                <Button size="sm" className="md:text-base" variant="default">
+                  <span className="hidden sm:inline">ダッシュボード</span>
+                  <span className="sm:hidden">ダッシュボード</span>
                 </Button>
               </Link>
             ) : (
               <>
-                <Link href="/apply">
-                  <Button size="lg" variant="default">
+                <Link href="/apply" className="hidden sm:block">
+                  <Button size="sm" className="md:text-base" variant="default">
                     新規お申し込み
                   </Button>
                 </Link>
                 <Link href="/login">
-                  <Button size="lg" variant="outline">
+                  <Button size="sm" className="md:text-base" variant="outline">
                     ログイン
                   </Button>
                 </Link>
@@ -45,26 +47,26 @@ export default async function LandingPage() {
       </header>
 
       {/* ヒーローセクション */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <h1 className="text-5xl md:text-6xl font-bold tracking-tight">
+      <section className="container mx-auto px-4 py-12 md:py-20 text-center">
+        <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
             請求業務を<span className="text-primary">シンプル</span>に。
             <br />
             経営を<span className="text-primary">スマート</span>に。
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
             見積書・請求書発行から売掛・買掛管理、会計処理まで。
-            <br />
+            <br className="hidden sm:block" />
             中小企業の経理業務を一元管理できるクラウドシステム。
           </p>
-          <div className="flex gap-4 justify-center pt-6">
-            <Link href="/apply">
-              <Button size="lg" className="text-lg px-8 py-6">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4 md:pt-6 max-w-md sm:max-w-none mx-auto">
+            <Link href="/apply" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6">
                 今すぐ無料で始める
               </Button>
             </Link>
-            <Link href="#features">
-              <Button size="lg" variant="outline" className="text-lg px-8 py-6">
+            <Link href="#features" className="w-full sm:w-auto">
+              <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6">
                 機能を見る
               </Button>
             </Link>
@@ -73,15 +75,15 @@ export default async function LandingPage() {
       </section>
 
       {/* 特徴セクション */}
-      <section id="features" className="container mx-auto px-4 py-20 bg-white">
-        <h2 className="text-4xl font-bold text-center mb-12">主な機能</h2>
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <section id="features" className="container mx-auto px-4 py-12 md:py-20 bg-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">主な機能</h2>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
           <Card className="border-2 hover:shadow-lg transition-shadow">
             <CardContent className="pt-6">
               <div className="rounded-full bg-blue-100 w-16 h-16 flex items-center justify-center mb-4">
                 <Receipt className="h-8 w-8 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">請求書管理</h3>
+              <h3 className="text-xl md:text-2xl font-bold mb-3">請求書管理</h3>
               <p className="text-muted-foreground">
                 見積書・請求書をかんたん作成。PDF出力やメール送信にも対応。テンプレートで作業効率アップ。
               </p>
@@ -93,7 +95,7 @@ export default async function LandingPage() {
               <div className="rounded-full bg-green-100 w-16 h-16 flex items-center justify-center mb-4">
                 <TrendingUp className="h-8 w-8 text-green-600" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">売掛・買掛管理</h3>
+              <h3 className="text-xl md:text-2xl font-bold mb-3">売掛・買掛管理</h3>
               <p className="text-muted-foreground">
                 入金管理や支払管理を自動化。期限超過アラートで未回収リスクを軽減します。
               </p>
@@ -105,7 +107,7 @@ export default async function LandingPage() {
               <div className="rounded-full bg-purple-100 w-16 h-16 flex items-center justify-center mb-4">
                 <BarChart3 className="h-8 w-8 text-purple-600" />
               </div>
-              <h3 className="text-2xl font-bold mb-3">会計・レポート</h3>
+              <h3 className="text-xl md:text-2xl font-bold mb-3">会計・レポート</h3>
               <p className="text-muted-foreground">
                 仕訳入力から試算表、貸借対照表まで。リアルタイムで経営状況を把握できます。
               </p>
@@ -115,8 +117,8 @@ export default async function LandingPage() {
       </section>
 
       {/* メリットセクション */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-b from-blue-50 to-white">
-        <h2 className="text-4xl font-bold text-center mb-12">選ばれる理由</h2>
+      <section className="container mx-auto px-4 py-12 md:py-20 bg-gradient-to-b from-blue-50 to-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">選ばれる理由</h2>
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           <div className="flex gap-4">
             <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
@@ -161,8 +163,8 @@ export default async function LandingPage() {
       </section>
 
       {/* 機能詳細セクション */}
-      <section className="container mx-auto px-4 py-20 bg-white">
-        <h2 className="text-4xl font-bold text-center mb-12">機能一覧</h2>
+      <section className="container mx-auto px-4 py-12 md:py-20 bg-white">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">機能一覧</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {[
             { icon: Receipt, title: '見積書作成', desc: '柔軟なテンプレートで素早く作成' },
@@ -189,16 +191,16 @@ export default async function LandingPage() {
       </section>
 
       {/* CTAセクション */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
-        <div className="max-w-3xl mx-auto text-center space-y-6">
-          <h2 className="text-4xl font-bold">今すぐ始めましょう</h2>
-          <p className="text-xl opacity-90">
+      <section className="container mx-auto px-4 py-12 md:py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
+        <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">今すぐ始めましょう</h2>
+          <p className="text-base sm:text-lg md:text-xl opacity-90">
             請求書管理システムで、経理業務の効率化を実現。
-            <br />
+            <br className="hidden sm:block" />
             まずは無料でお試しください。
           </p>
-          <Link href="/apply">
-            <Button size="lg" variant="secondary" className="text-lg px-8 py-6 mt-4">
+          <Link href="/apply" className="inline-block w-full sm:w-auto">
+            <Button size="lg" variant="secondary" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 mt-2 md:mt-4">
               無料で申し込む
             </Button>
           </Link>
@@ -206,9 +208,9 @@ export default async function LandingPage() {
       </section>
 
       {/* フッター */}
-      <footer className="border-t bg-gray-50 py-8">
+      <footer className="border-t bg-gray-50 py-6 md:py-8">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p>&copy; 2025 請求書管理システム. All rights reserved.</p>
+          <p className="text-sm md:text-base">&copy; 2025 請求書管理システム. All rights reserved.</p>
         </div>
       </footer>
     </div>
