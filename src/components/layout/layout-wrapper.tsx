@@ -1,7 +1,6 @@
 'use client'
 
 import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
 import { Sidebar } from './sidebar'
 
 type LayoutWrapperProps = {
@@ -21,15 +20,6 @@ const noSidebarPaths = [
 export function LayoutWrapper({ children, isLoggedIn }: LayoutWrapperProps) {
   const pathname = usePathname()
   const shouldShowSidebar = isLoggedIn && !noSidebarPaths.includes(pathname)
-
-  useEffect(() => {
-    console.log('🔍 LayoutWrapper:', {
-      pathname,
-      isLoggedIn,
-      shouldShowSidebar,
-      noSidebarPaths
-    })
-  }, [pathname, isLoggedIn, shouldShowSidebar])
 
   if (shouldShowSidebar) {
     return (
