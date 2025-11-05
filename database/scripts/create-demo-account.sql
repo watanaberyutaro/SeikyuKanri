@@ -132,7 +132,7 @@ BEGIN
   -- 3. サンプル取引先データを作成
   -- ===========================================
 
-  INSERT INTO companies (
+  INSERT INTO client_companies (
     tenant_id,
     user_id,
     name,
@@ -193,90 +193,6 @@ BEGIN
   );
 
   RAISE NOTICE 'サンプル取引先データ作成完了';
-
-  -- ===========================================
-  -- 4. サンプル品目データを作成
-  -- ===========================================
-
-  INSERT INTO items (
-    tenant_id,
-    user_id,
-    name,
-    description,
-    unit_price,
-    unit,
-    tax_rate,
-    is_active,
-    created_at,
-    updated_at
-  ) VALUES
-  -- 品目1: システム開発
-  (
-    demo_tenant_id,
-    demo_user_id,
-    'システム開発（月額）',
-    'Webシステム開発・保守サービス',
-    500000,
-    '式',
-    10,
-    true,
-    now(),
-    now()
-  ),
-  -- 品目2: コンサルティング
-  (
-    demo_tenant_id,
-    demo_user_id,
-    'ITコンサルティング',
-    '技術コンサルティングサービス（1日）',
-    100000,
-    '日',
-    10,
-    true,
-    now(),
-    now()
-  ),
-  -- 品目3: サーバー利用料
-  (
-    demo_tenant_id,
-    demo_user_id,
-    'サーバー利用料',
-    'クラウドサーバー月額利用料',
-    50000,
-    '月',
-    10,
-    true,
-    now(),
-    now()
-  ),
-  -- 品目4: ライセンス料
-  (
-    demo_tenant_id,
-    demo_user_id,
-    'ソフトウェアライセンス',
-    'ソフトウェアライセンス料（年間）',
-    300000,
-    '年',
-    10,
-    true,
-    now(),
-    now()
-  ),
-  -- 品目5: 研修サービス
-  (
-    demo_tenant_id,
-    demo_user_id,
-    '技術研修サービス',
-    'エンジニア向け技術研修（1名）',
-    80000,
-    '名',
-    10,
-    true,
-    now(),
-    now()
-  );
-
-  RAISE NOTICE 'サンプル品目データ作成完了';
 
   -- ===========================================
   -- 完了メッセージ
