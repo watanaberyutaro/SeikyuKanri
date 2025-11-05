@@ -80,7 +80,7 @@ export function InvoiceForm({ companies, initialData, onSubmit, onChange, onCrea
   const [issueDate, setIssueDate] = useState(initialData?.issue_date || new Date().toISOString().split('T')[0])
   const [dueDate, setDueDate] = useState(initialData?.due_date || '')
   const [paymentDate, setPaymentDate] = useState(initialData?.payment_date || '')
-  const [status, setStatus] = useState<'pending' | 'sent' | 'paid'>(initialData?.status || 'sent')
+  const [status, setStatus] = useState<'pending' | 'sent' | 'paid'>(initialData?.status || 'pending')
   const [notes, setNotes] = useState(initialData?.notes || '')
   const [terms, setTerms] = useState(initialData?.terms || '')
   const [items, setItems] = useState<InvoiceItem[]>(

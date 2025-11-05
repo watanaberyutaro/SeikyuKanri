@@ -198,7 +198,7 @@ export default function NewInvoicePage() {
               invoice_number: nextInvoiceNumber,
               title: '',
               issue_date: new Date().toISOString().split('T')[0],
-              status: 'sent',
+              status: 'pending',
               items: [{ description: '', quantity: 1, unit_price: 0, amount: 0 }],
             }}
             onSubmit={handleSubmit}

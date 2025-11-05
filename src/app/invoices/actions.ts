@@ -92,59 +92,10 @@ export async function createInvoice(data: InvoiceFormData) {
     return { error: itemsError.message }
   }
 
-  // ステータスが'sent'の場合、仕訳を自動生成
+  // 新規作成時は仕訳を生成しない
+  // ステータスを pending → sent に変更したときに updateInvoiceStatus で仕訳が自動生成される
   console.log('📝 請求書作成: ステータス =', data.status)
-  if (data.status === 'sent') {
-    console.log('🔄 仕訳自動生成を開始します...')
-    try {
-      // 企業情報を取得
-      const { data: company } = await supabase
-        .from('client_companies')
-        .select('name')
-        .eq('id', data.company_id)
-        .single()
-
-      console.log('🏢 企業情報:', company)
-
-      if (company) {
-        const invoiceData = {
-          id: invoice.id,
-          invoice_number: data.invoice_number,
-          issue_date: data.issue_date,
-          due_date: data.due_date || null,
-          total_amount,
-          status: data.status,
-          payment_date: data.payment_date || null,
-          company: { name: company.name },
-        }
-
-        console.log('📊 請求書データ:', invoiceData)
-
-        // 売上仕訳を生成
-        const journal = await createInvoiceIssuedJournal(
-          invoiceData,
-          supabase,
-          profile?.tenant_id!,
-          user.id
-        )
-
-        console.log('📄 生成された仕訳:', journal)
-
-        if (journal) {
-          const journalId = await saveJournal(journal, supabase, profile?.tenant_id!, user.id)
-          console.log('✅ 売上仕訳を自動生成しました:', journalId)
-        } else {
-          console.error('❌ 仕訳の生成に失敗しました（journalがnull）')
-        }
-      } else {
-        console.error('❌ 企業情報が見つかりません')
-      }
-    } catch (error) {
-      console.error('❌ 仕訳自動生成エラー:', error)
-    }
-  } else {
-    console.log('⏭️ ステータスが sent ではないため、仕訳生成をスキップします')
-  }
+  console.log('💡 仕訳は送信済みにステータス変更時に自動生成されます')
 
   revalidatePath('/invoices')
   redirect('/invoices')
