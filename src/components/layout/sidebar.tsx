@@ -28,13 +28,6 @@ const navigationStructure = [
     ],
   },
   {
-    section: 'settings',
-    title: '設定',
-    items: [
-      { name: '設定', href: '/settings', icon: Settings },
-    ],
-  },
-  {
     section: 'accounting-operations',
     title: '経理',
     icon: Briefcase,
@@ -126,6 +119,13 @@ const navigationStructure = [
           ] : []),
         ],
       },
+    ],
+  },
+  {
+    section: 'settings',
+    title: '設定',
+    items: [
+      { name: '設定', href: '/settings', icon: Settings },
     ],
   },
 ]
