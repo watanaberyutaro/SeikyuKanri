@@ -9,6 +9,14 @@ import { findMatches } from '@/lib/reconciliation/matching'
  */
 export async function GET(request: NextRequest) {
   try {
+    // Feature flag チェック
+    if (process.env.FEATURE_BANK_IMPORT !== '1') {
+      return NextResponse.json(
+        { error: 'この機能は無効化されています' },
+        { status: 404 }
+      )
+    }
+
     const supabase = await createClient()
 
     // 認証チェック
