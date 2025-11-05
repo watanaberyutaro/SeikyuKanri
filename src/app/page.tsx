@@ -2,8 +2,12 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Receipt, Building2, TrendingUp, Shield, CheckCircle2, BarChart3 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/server'
 
-export default function LandingPage() {
+export default async function LandingPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       {/* ヘッダー */}
@@ -16,16 +20,26 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex gap-3">
-            <Link href="/apply">
-              <Button size="lg" variant="default">
-                新規お申し込み
-              </Button>
-            </Link>
-            <Link href="/login">
-              <Button size="lg" variant="outline">
-                ログイン
-              </Button>
-            </Link>
+            {user ? (
+              <Link href="/dashboard">
+                <Button size="lg" variant="default">
+                  ダッシュボード
+                </Button>
+              </Link>
+            ) : (
+              <>
+                <Link href="/apply">
+                  <Button size="lg" variant="default">
+                    新規お申し込み
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="lg" variant="outline">
+                    ログイン
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </header>
