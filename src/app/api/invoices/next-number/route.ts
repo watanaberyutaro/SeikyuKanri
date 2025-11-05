@@ -28,23 +28,26 @@ export async function GET(request: NextRequest) {
   // 現在の年を取得
   const currentYear = new Date().getFullYear()
 
-  // 今年の最新の請求書番号を取得（invoice_numberでソート）
-  const { data: latestInvoice } = await supabase
+  // 今年の請求書を全て取得して、番号の最大値を見つける
+  const { data: invoices } = await supabase
     .from('invoices')
     .select('invoice_number')
     .eq('tenant_id', profile.tenant_id)
     .like('invoice_number', `INV-${currentYear}-%`)
-    .order('invoice_number', { ascending: false })
-    .limit(1)
-    .single()
 
   let nextNumber = 1
 
-  if (latestInvoice?.invoice_number) {
-    // 既存の番号から連番を抽出（例: INV-2025-001 → 001）
-    const match = latestInvoice.invoice_number.match(/INV-\d{4}-(\d+)/)
-    if (match && match[1]) {
-      nextNumber = parseInt(match[1], 10) + 1
+  if (invoices && invoices.length > 0) {
+    // 各請求書番号から連番を抽出して最大値を見つける
+    const numbers = invoices
+      .map((inv) => {
+        const match = inv.invoice_number.match(/INV-\d{4}-(\d+)/)
+        return match && match[1] ? parseInt(match[1], 10) : 0
+      })
+      .filter((num) => num > 0)
+
+    if (numbers.length > 0) {
+      nextNumber = Math.max(...numbers) + 1
     }
   }
 
