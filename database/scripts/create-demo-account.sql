@@ -141,7 +141,6 @@ BEGIN
     phone,
     email,
     contact_person,
-    payment_terms,
     notes,
     created_at,
     updated_at
@@ -156,8 +155,7 @@ BEGIN
     '03-1111-2222',
     'contact@abc-trading.example.com',
     '山田太郎',
-    30,
-    '主要取引先',
+    '主要取引先。支払条件: 月末締め翌月末払い',
     now(),
     now()
   ),
@@ -171,8 +169,7 @@ BEGIN
     '03-3333-4444',
     'info@xyz-corp.example.com',
     '佐藤花子',
-    60,
-    '月次定期取引',
+    '月次定期取引。支払条件: 月末締め翌々月末払い',
     now(),
     now()
   ),
@@ -186,8 +183,7 @@ BEGIN
     '03-5555-6666',
     'sales@tech-industry.example.com',
     '鈴木一郎',
-    45,
-    'IT関連サービス提供先',
+    'IT関連サービス提供先。支払条件: 当月末締め翌月25日払い',
     now(),
     now()
   );
