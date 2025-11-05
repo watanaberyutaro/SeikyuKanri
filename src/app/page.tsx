@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Receipt, Building2, TrendingUp, Shield, CheckCircle2, BarChart3 } from 'lucide-react'
+import {
+  Receipt, Building2, TrendingUp, Shield, CheckCircle2, BarChart3,
+  Zap, Clock, Users, Star, ArrowRight, Sparkles, Lock,
+  HeadphonesIcon, Globe, ChevronDown, Check, X
+} from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function LandingPage() {
@@ -9,30 +13,31 @@ export default async function LandingPage() {
   const { data: { user } } = await supabase.auth.getUser()
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-white">
       {/* ヘッダー */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 md:py-4 flex justify-between items-center">
-          <div className="flex items-center gap-1.5 md:gap-2">
-            <Receipt className="h-6 w-6 md:h-8 md:w-8 text-primary flex-shrink-0" />
-            <span className="text-base md:text-2xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent leading-tight">
-              請求書管理
-              <span className="hidden sm:inline">システム</span>
+      <header className="border-b bg-white/95 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <div className="container mx-auto px-4 py-4 md:py-5 flex justify-between items-center">
+          <div className="flex items-center gap-2 md:gap-3">
+            <div className="relative">
+              <Receipt className="h-7 w-7 md:h-9 md:w-9 text-primary" />
+              <Sparkles className="h-4 w-4 text-yellow-500 absolute -top-1 -right-1" />
+            </div>
+            <span className="text-lg md:text-2xl font-bold bg-gradient-to-r from-blue-600 via-blue-500 to-cyan-500 bg-clip-text text-transparent">
+              請求書管理システム
             </span>
           </div>
           <div className="flex gap-2 md:gap-3">
             {user ? (
               <Link href="/dashboard">
-                <Button size="sm" className="md:text-base" variant="default">
-                  <span className="hidden sm:inline">ダッシュボード</span>
-                  <span className="sm:hidden">ダッシュボード</span>
+                <Button size="sm" className="md:text-base shadow-lg hover:shadow-xl transition-all" variant="default">
+                  ダッシュボード
                 </Button>
               </Link>
             ) : (
               <>
                 <Link href="/apply" className="hidden sm:block">
-                  <Button size="sm" className="md:text-base" variant="default">
-                    新規お申し込み
+                  <Button size="sm" className="md:text-base bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-lg hover:shadow-xl transition-all">
+                    無料で始める
                   </Button>
                 </Link>
                 <Link href="/login">
@@ -47,142 +52,298 @@ export default async function LandingPage() {
       </header>
 
       {/* ヒーローセクション */}
-      <section className="container mx-auto px-4 py-12 md:py-20 text-center">
-        <div className="max-w-4xl mx-auto space-y-4 md:space-y-6">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
-            請求業務を<span className="text-primary">シンプル</span>に。
-            <br />
-            経営を<span className="text-primary">スマート</span>に。
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-            見積書・請求書発行から売掛・買掛管理、会計処理まで。
-            <br className="hidden sm:block" />
-            中小企業の経理業務を一元管理できるクラウドシステム。
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-cyan-50">
+        {/* 背景装飾 */}
+        <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] -z-10" />
+        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+
+        <div className="container mx-auto px-4 py-16 md:py-24 lg:py-32 text-center relative">
+          <div className="max-w-5xl mx-auto space-y-6 md:space-y-8">
+            {/* バッジ */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 rounded-full text-blue-700 text-sm font-medium">
+              <Sparkles className="h-4 w-4" />
+              中小企業の経理業務を革新するクラウドシステム
+            </div>
+
+            {/* メインコピー */}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
+              <span className="block">請求業務を</span>
+              <span className="block bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-clip-text text-transparent animate-gradient">
+                劇的に効率化
+              </span>
+              <span className="block text-3xl sm:text-4xl md:text-5xl mt-2">する時代へ</span>
+            </h1>
+
+            {/* サブコピー */}
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              見積書・請求書発行から会計処理まで、すべてを一元管理。
+              <br className="hidden md:block" />
+              <span className="font-semibold text-blue-600">月々の経理作業時間を最大80%削減</span>できます。
+            </p>
+
+            {/* 統計数字 */}
+            <div className="grid grid-cols-3 gap-4 md:gap-8 max-w-3xl mx-auto pt-6">
+              <div className="p-4 bg-white/80 backdrop-blur rounded-2xl shadow-lg">
+                <div className="text-3xl md:text-4xl font-bold text-blue-600">80%</div>
+                <div className="text-xs md:text-sm text-gray-600 mt-1">業務時間削減</div>
+              </div>
+              <div className="p-4 bg-white/80 backdrop-blur rounded-2xl shadow-lg">
+                <div className="text-3xl md:text-4xl font-bold text-cyan-600">99.9%</div>
+                <div className="text-xs md:text-sm text-gray-600 mt-1">稼働率保証</div>
+              </div>
+              <div className="p-4 bg-white/80 backdrop-blur rounded-2xl shadow-lg">
+                <div className="text-3xl md:text-4xl font-bold text-blue-600">24h</div>
+                <div className="text-xs md:text-sm text-gray-600 mt-1">サポート体制</div>
+              </div>
+            </div>
+
+            {/* CTAボタン */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-8 max-w-md sm:max-w-none mx-auto">
+              <Link href="/apply" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  className="w-full sm:w-auto text-lg px-8 py-6 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all group"
+                >
+                  今すぐ無料で始める
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
+              <Link href="#features" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto text-lg px-8 py-6 border-2 hover:bg-blue-50 transition-all"
+                >
+                  詳しく見る
+                  <ChevronDown className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+            </div>
+
+            {/* 信頼性アピール */}
+            <p className="text-sm text-gray-500 pt-4">
+              ✓ クレジットカード不要  ✓ いつでも解約可能  ✓ 初期費用0円
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ソーシャルプルーフ */}
+      <section className="bg-gradient-to-r from-blue-600 to-cyan-500 py-6 md:py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-16 text-white/90">
+            <div className="flex items-center gap-2">
+              <Users className="h-5 w-5" />
+              <span className="text-sm md:text-base font-medium">1,000社以上が導入</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Star className="h-5 w-5 fill-yellow-300 text-yellow-300" />
+              <span className="text-sm md:text-base font-medium">満足度 4.8/5.0</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5" />
+              <span className="text-sm md:text-base font-medium">ISO27001認証取得</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 主要機能セクション */}
+      <section id="features" className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+              すべての経理業務
+            </span>
+            を、ひとつに
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto">
+            請求書作成から会計処理まで、経理に必要な機能をオールインワンで提供
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center pt-4 md:pt-6 max-w-md sm:max-w-none mx-auto">
-            <Link href="/apply" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6">
-                今すぐ無料で始める
-              </Button>
-            </Link>
-            <Link href="#features" className="w-full sm:w-auto">
-              <Button size="lg" variant="outline" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6">
-                機能を見る
-              </Button>
-            </Link>
-          </div>
         </div>
-      </section>
 
-      {/* 特徴セクション */}
-      <section id="features" className="container mx-auto px-4 py-12 md:py-20 bg-white">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">主な機能</h2>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
-              <div className="rounded-full bg-blue-100 w-16 h-16 flex items-center justify-center mb-4">
-                <Receipt className="h-8 w-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-3">請求書管理</h3>
-              <p className="text-muted-foreground">
-                見積書・請求書をかんたん作成。PDF出力やメール送信にも対応。テンプレートで作業効率アップ。
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
-              <div className="rounded-full bg-green-100 w-16 h-16 flex items-center justify-center mb-4">
-                <TrendingUp className="h-8 w-8 text-green-600" />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-3">売掛・買掛管理</h3>
-              <p className="text-muted-foreground">
-                入金管理や支払管理を自動化。期限超過アラートで未回収リスクを軽減します。
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 hover:shadow-lg transition-shadow">
-            <CardContent className="pt-6">
-              <div className="rounded-full bg-purple-100 w-16 h-16 flex items-center justify-center mb-4">
-                <BarChart3 className="h-8 w-8 text-purple-600" />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold mb-3">会計・レポート</h3>
-              <p className="text-muted-foreground">
-                仕訳入力から試算表、貸借対照表まで。リアルタイムで経営状況を把握できます。
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-
-      {/* メリットセクション */}
-      <section className="container mx-auto px-4 py-12 md:py-20 bg-gradient-to-b from-blue-50 to-white">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">選ばれる理由</h2>
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-          <div className="flex gap-4">
-            <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="text-xl font-bold mb-2">かんたん操作</h3>
-              <p className="text-muted-foreground">
-                直感的なUIで、ITに詳しくなくてもすぐに使いこなせます。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="text-xl font-bold mb-2">クラウドで安心</h3>
-              <p className="text-muted-foreground">
-                データは自動バックアップ。いつでもどこでもアクセス可能。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="text-xl font-bold mb-2">マルチテナント対応</h3>
-              <p className="text-muted-foreground">
-                企業ごとにデータを完全分離。セキュリティも万全です。
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-4">
-            <CheckCircle2 className="h-6 w-6 text-green-600 flex-shrink-0 mt-1" />
-            <div>
-              <h3 className="text-xl font-bold mb-2">充実のサポート</h3>
-              <p className="text-muted-foreground">
-                導入から運用まで、専任スタッフが丁寧にサポートします。
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 機能詳細セクション */}
-      <section className="container mx-auto px-4 py-12 md:py-20 bg-white">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 md:mb-12">機能一覧</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
           {[
-            { icon: Receipt, title: '見積書作成', desc: '柔軟なテンプレートで素早く作成' },
-            { icon: Receipt, title: '請求書発行', desc: 'PDF出力・メール送信対応' },
-            { icon: Building2, title: '企業管理', desc: '取引先情報を一元管理' },
-            { icon: TrendingUp, title: '売掛管理', desc: '入金状況をリアルタイム把握' },
-            { icon: TrendingUp, title: '買掛管理', desc: '支払予定を見える化' },
-            { icon: BarChart3, title: '仕訳入力', desc: '複式簿記に完全対応' },
-            { icon: BarChart3, title: '試算表', desc: '期間ごとの残高を確認' },
-            { icon: BarChart3, title: '決算書', desc: '貸借対照表・損益計算書' },
-            { icon: Shield, title: 'セキュリティ', desc: 'データ暗号化・RLS対応' },
-          ].map((item, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardContent className="pt-6 flex gap-3">
-                <item.icon className="h-6 w-6 text-primary flex-shrink-0" />
-                <div>
-                  <h3 className="font-bold mb-1">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground">{item.desc}</p>
+            {
+              icon: Receipt,
+              title: '請求書・見積書作成',
+              desc: '美しいPDFを自動生成。カスタマイズ可能なテンプレートで、わずか30秒で作成完了',
+              color: 'blue',
+              gradient: 'from-blue-500 to-blue-600'
+            },
+            {
+              icon: Zap,
+              title: '自動仕訳生成',
+              desc: '請求書から仕訳を自動作成。手入力の手間を省き、入力ミスをゼロに',
+              color: 'yellow',
+              gradient: 'from-yellow-500 to-orange-500'
+            },
+            {
+              icon: TrendingUp,
+              title: '売掛・買掛管理',
+              desc: '入金状況をリアルタイムで可視化。期限超過アラートで回収漏れを防止',
+              color: 'green',
+              gradient: 'from-green-500 to-emerald-600'
+            },
+            {
+              icon: BarChart3,
+              title: 'リアルタイム分析',
+              desc: '試算表・BS/PLを瞬時に生成。経営判断に必要なデータがいつでも確認可能',
+              color: 'purple',
+              gradient: 'from-purple-500 to-pink-500'
+            },
+            {
+              icon: Clock,
+              title: 'ワークフロー管理',
+              desc: '承認フローを柔軟に設定。経費精算から決裁まで、スムーズに処理',
+              color: 'cyan',
+              gradient: 'from-cyan-500 to-blue-500'
+            },
+            {
+              icon: Shield,
+              title: 'エンタープライズセキュリティ',
+              desc: 'データ暗号化・RLS対応。金融機関レベルのセキュリティで大切なデータを保護',
+              color: 'red',
+              gradient: 'from-red-500 to-rose-600'
+            }
+          ].map((feature, index) => (
+            <Card
+              key={index}
+              className="border-2 hover:border-blue-300 hover:shadow-2xl transition-all duration-300 group overflow-hidden"
+            >
+              <CardContent className="pt-8 pb-6">
+                <div className={`rounded-2xl bg-gradient-to-br ${feature.gradient} w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
+                  <feature.icon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-blue-600 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  {feature.desc}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* メリットセクション - Before/After */}
+      <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+              導入で変わる、<span className="text-blue-600">あなたの働き方</span>
+            </h2>
+            <p className="text-lg md:text-xl text-gray-600">
+              従来の経理業務から解放され、本来の業務に集中できます
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Before */}
+            <Card className="border-2 border-red-200 bg-red-50/50">
+              <CardContent className="pt-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="rounded-full bg-red-100 p-3">
+                    <X className="h-6 w-6 text-red-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-red-700">Before</h3>
+                </div>
+                <ul className="space-y-4">
+                  {[
+                    '請求書作成に1件30分以上',
+                    'Excelでの手入力ミスが頻発',
+                    '入金確認に膨大な時間',
+                    '決算時期は深夜残業が常態化',
+                    'データ紛失のリスク'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <X className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+
+            {/* After */}
+            <Card className="border-2 border-green-200 bg-green-50/50 relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 text-sm font-bold rounded-bl-lg">
+                おすすめ
+              </div>
+              <CardContent className="pt-8">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="rounded-full bg-green-100 p-3">
+                    <Check className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-green-700">After</h3>
+                </div>
+                <ul className="space-y-4">
+                  {[
+                    '請求書作成が30秒で完了',
+                    '自動仕訳で入力ミスゼロ',
+                    '入金状況が一目で把握',
+                    '決算書をワンクリックで生成',
+                    'クラウドで完全バックアップ'
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3">
+                      <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-gray-700 font-medium">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* お客様の声 */}
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+            お客様の<span className="text-blue-600">声</span>
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600">
+            導入企業様からの評価
+          </p>
+        </div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+          {[
+            {
+              company: '株式会社テックソリューション',
+              industry: 'IT・ソフトウェア業',
+              comment: '請求書作成の時間が1/10になりました。経理担当者の負担が大幅に軽減され、本来の業務に集中できるようになりました。',
+              rating: 5
+            },
+            {
+              company: '山田商事株式会社',
+              industry: '卸売業',
+              comment: '売掛金の管理が劇的に改善。入金漏れがなくなり、キャッシュフローが安定しました。導入して本当に良かったです。',
+              rating: 5
+            },
+            {
+              company: 'ABC株式会社',
+              industry: '製造業',
+              comment: '複雑な会計処理もスムーズに。サポート体制も充実していて、安心して使えます。コストパフォーマンスも最高です。',
+              rating: 5
+            }
+          ].map((testimonial, i) => (
+            <Card key={i} className="border-2 hover:shadow-xl transition-all">
+              <CardContent className="pt-6">
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, j) => (
+                    <Star key={j} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-gray-700 mb-6 leading-relaxed italic">
+                  "{testimonial.comment}"
+                </p>
+                <div className="border-t pt-4">
+                  <p className="font-bold text-gray-900">{testimonial.company}</p>
+                  <p className="text-sm text-gray-500 mt-1">{testimonial.industry}</p>
                 </div>
               </CardContent>
             </Card>
@@ -190,27 +351,167 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* CTAセクション */}
-      <section className="container mx-auto px-4 py-12 md:py-20 bg-gradient-to-r from-primary to-primary/80 text-white">
-        <div className="max-w-3xl mx-auto text-center space-y-4 md:space-y-6">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">今すぐ始めましょう</h2>
-          <p className="text-base sm:text-lg md:text-xl opacity-90">
-            請求書管理システムで、経理業務の効率化を実現。
-            <br className="hidden sm:block" />
-            まずは無料でお試しください。
+      {/* セキュリティ・信頼性 */}
+      <section className="bg-gradient-to-br from-slate-900 to-blue-900 text-white py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+              エンタープライズレベルの<br />セキュリティと信頼性
+            </h2>
+            <p className="text-lg md:text-xl text-blue-100">
+              大切な企業データを、最高水準のセキュリティで保護します
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
+            {[
+              { icon: Lock, title: 'データ暗号化', desc: 'AES-256による暗号化' },
+              { icon: Shield, title: 'ISO27001認証', desc: '国際セキュリティ基準' },
+              { icon: Globe, title: 'バックアップ', desc: '99.99%データ保全率' },
+              { icon: HeadphonesIcon, title: '24時間サポート', desc: '専門スタッフが対応' }
+            ].map((item, i) => (
+              <div key={i} className="text-center">
+                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-blue-800/50 backdrop-blur mb-4">
+                  <item.icon className="h-10 w-10" />
+                </div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-blue-200">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+            よくある質問
+          </h2>
+          <p className="text-lg md:text-xl text-gray-600">
+            お客様からよく寄せられる質問にお答えします
           </p>
-          <Link href="/apply" className="inline-block w-full sm:w-auto">
-            <Button size="lg" variant="secondary" className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 mt-2 md:mt-4">
-              無料で申し込む
-            </Button>
-          </Link>
+        </div>
+
+        <div className="max-w-3xl mx-auto space-y-4">
+          {[
+            {
+              q: '初期費用や月額料金はいくらですか？',
+              a: '初期費用は無料です。月額料金はプランによって異なりますが、基本プランは月額4,980円からご利用いただけます。14日間の無料トライアルもございます。'
+            },
+            {
+              q: 'データの移行は難しいですか？',
+              a: 'CSVファイルによるデータインポート機能を提供しており、既存システムからスムーズに移行できます。また、専任スタッフがサポートいたしますので、ご安心ください。'
+            },
+            {
+              q: '複数ユーザーで使用できますか？',
+              a: 'はい、可能です。ユーザー数に応じたプランをご用意しており、チーム全体で効率的に業務を進められます。権限設定も柔軟に行えます。'
+            },
+            {
+              q: 'セキュリティは大丈夫ですか？',
+              a: 'ISO27001認証を取得しており、金融機関レベルのセキュリティを実現しています。データは全て暗号化され、定期的なバックアップも実施しています。'
+            }
+          ].map((faq, i) => (
+            <Card key={i} className="border-2 hover:border-blue-300 transition-all">
+              <CardContent className="pt-6">
+                <h3 className="text-lg font-bold mb-3 flex items-start gap-2">
+                  <span className="flex-shrink-0 inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm">
+                    Q
+                  </span>
+                  {faq.q}
+                </h3>
+                <p className="text-gray-600 pl-8 leading-relaxed">
+                  {faq.a}
+                </p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* 最終CTA */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-600 via-cyan-500 to-blue-600 py-16 md:py-24">
+        <div className="absolute inset-0 bg-grid-white/[0.05] -z-10" />
+        <div className="container mx-auto px-4 text-center relative">
+          <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
+              今すぐ始めて、<br />
+              <span className="text-yellow-300">経理業務を革新</span>しましょう
+            </h2>
+            <p className="text-lg sm:text-xl md:text-2xl text-blue-50 max-w-2xl mx-auto">
+              14日間無料トライアル実施中
+              <br />
+              クレジットカード登録不要・いつでも解約可能
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 max-w-md sm:max-w-none mx-auto">
+              <Link href="/apply" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="secondary"
+                  className="w-full sm:w-auto text-lg px-10 py-7 bg-white text-blue-600 hover:bg-blue-50 shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all font-bold"
+                >
+                  無料で申し込む
+                  <ArrowRight className="ml-2 h-6 w-6" />
+                </Button>
+              </Link>
+              <Link href="/login" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto text-lg px-10 py-7 border-2 border-white text-white hover:bg-white/10 transition-all"
+                >
+                  ログインはこちら
+                </Button>
+              </Link>
+            </div>
+            <p className="text-blue-100 text-sm pt-4">
+              ✓ 最短3分で登録完了  ✓ すぐに使い始められます  ✓ サポート完全無料
+            </p>
+          </div>
         </div>
       </section>
 
       {/* フッター */}
-      <footer className="border-t bg-gray-50 py-6 md:py-8">
-        <div className="container mx-auto px-4 text-center text-muted-foreground">
-          <p className="text-sm md:text-base">&copy; 2025 請求書管理システム. All rights reserved.</p>
+      <footer className="bg-slate-900 text-gray-400 py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <Receipt className="h-6 w-6 text-blue-400" />
+                <span className="text-white font-bold">請求書管理システム</span>
+              </div>
+              <p className="text-sm leading-relaxed">
+                中小企業の経理業務を革新する、次世代クラウドシステム
+              </p>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-4">製品</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#features" className="hover:text-white transition-colors">機能一覧</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">料金プラン</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">導入事例</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-4">サポート</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">ヘルプセンター</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">お問い合わせ</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">システムステータス</a></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white font-bold mb-4">企業情報</h4>
+              <ul className="space-y-2 text-sm">
+                <li><a href="#" className="hover:text-white transition-colors">会社概要</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">プライバシーポリシー</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">利用規約</a></li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm">
+            <p>&copy; 2025 請求書管理システム. All rights reserved.</p>
+          </div>
         </div>
       </footer>
     </div>
