@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { signout } from '@/app/(auth)/actions'
-import { LayoutDashboard, Building2, FileText, Receipt, LogOut, Shield, DollarSign, TrendingUp, Calculator, ChevronDown, ChevronRight, Briefcase, BookOpen, Settings, BarChart3, PieChart, ClipboardCheck, Wallet, Plus, CreditCard, Package, FileSearch, ClipboardList, Menu, X, Upload } from 'lucide-react'
+import { LayoutDashboard, Building2, FileText, Receipt, LogOut, Shield, DollarSign, TrendingUp, Calculator, ChevronDown, ChevronRight, Briefcase, BookOpen, Settings, BarChart3, PieChart, ClipboardCheck, Wallet, Plus, CreditCard, Package, FileSearch, ClipboardList, Menu, X, Upload, Link as LinkIcon } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 // Feature flags
@@ -18,6 +18,7 @@ const fixedAssetsFeatureEnabled = process.env.NEXT_PUBLIC_FEATURE_FIXED_ASSETS =
 const edocFeatureEnabled = process.env.NEXT_PUBLIC_FEATURE_EDOC === '1'
 const auditFeatureEnabled = process.env.NEXT_PUBLIC_FEATURE_AUDIT === '1'
 const bankImportFeatureEnabled = process.env.NEXT_PUBLIC_FEATURE_BANK_IMPORT === '1'
+const bankApiFeatureEnabled = process.env.NEXT_PUBLIC_FEATURE_BANK_API === '1'
 
 // ナビゲーション構造（階層化）
 const navigationStructure = [
@@ -77,6 +78,9 @@ const navigationStructure = [
           { name: '仕訳帳', href: '/accounting/journals', icon: FileText },
           ...(bankImportFeatureEnabled ? [
             { name: '銀行インポート', href: '/bank/import', icon: Upload },
+          ] : []),
+          ...(bankApiFeatureEnabled ? [
+            { name: '銀行API連携', href: '/bank-api/connections', icon: LinkIcon },
           ] : []),
         ],
       },

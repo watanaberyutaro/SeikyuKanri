@@ -15,6 +15,7 @@ export type RegisterIncomingPaymentInput = {
   customer_id?: string
   method?: string
   memo?: string
+  idempotency_key?: string // 重複防止キー（銀行API連携用）
 }
 
 export type RegisterIncomingPaymentResult = {
@@ -40,6 +41,27 @@ export async function registerIncomingPayment(
   user_id: string
 ): Promise<RegisterIncomingPaymentResult> {
   try {
+    // 0. idempotency_key があれば、既存の入金をチェック
+    if (input.idempotency_key) {
+      const { data: existingPayment, error: existingError } = await supabase
+        .from('payments')
+        .select('id, payment_allocations(id, invoice_id)')
+        .eq('idempotency_key', input.idempotency_key)
+        .eq('tenant_id', tenant_id)
+        .single()
+
+      if (existingPayment && !existingError) {
+        // 既に登録済み
+        const allocation = (existingPayment as any).payment_allocations?.[0]
+        return {
+          success: true,
+          payment_id: existingPayment.id,
+          allocation_id: allocation?.id,
+          error: undefined
+        }
+      }
+    }
+
     // 1. 請求書の存在と金額を確認
     const { data: invoice, error: invoiceError } = await supabase
       .from('invoices')
@@ -92,7 +114,9 @@ export async function registerIncomingPayment(
     }
 
     // 4. 入金レコードを作成
-    const paymentData: CreatePaymentInput = {
+    const paymentData: any = {
+      tenant_id,
+      user_id,
       customer_id: input.customer_id || invoice.company_id,
       received_on: input.received_on,
       amount: input.amount,
@@ -100,13 +124,14 @@ export async function registerIncomingPayment(
       memo: input.memo
     }
 
+    // idempotency_key があれば追加
+    if (input.idempotency_key) {
+      paymentData.idempotency_key = input.idempotency_key
+    }
+
     const { data: payment, error: paymentError } = await supabase
       .from('payments')
-      .insert({
-        tenant_id,
-        user_id,
-        ...paymentData
-      })
+      .insert(paymentData)
       .select('id')
       .single()
 
