@@ -12,9 +12,12 @@ import { randomBytes } from 'crypto'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { provider: string } }
+  { params }: { params: Promise<{ provider: string }> }
 ) {
   try {
+    // Await params (Next.js 15 requirement)
+    const { provider: providerParam } = await params
+
     // Feature flag check
     if (process.env.FEATURE_BANK_API !== '1') {
       return NextResponse.json(
@@ -52,7 +55,7 @@ export async function GET(
       )
     }
 
-    const provider = params.provider.toLowerCase()
+    const provider = providerParam.toLowerCase()
 
     // Only Moneytree supported for now
     if (provider !== 'moneytree') {
