@@ -139,7 +139,7 @@ export async function signout() {
 
   if (error) {
     console.error('Signout error:', error)
-    return { error: error.message }
+    // Even if signout fails, redirect to login
   }
 
   revalidatePath('/', 'layout')
