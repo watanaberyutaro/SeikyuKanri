@@ -5,10 +5,29 @@ import { CreateTenantApplicationInput } from '@/types/tenant-application'
 
 // POST /api/applications - 新規申請を作成
 export async function POST(request: NextRequest) {
+  console.log('[API] POST /api/applications - Starting request')
+
+  // 環境変数チェック
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    console.error('[API] NEXT_PUBLIC_SUPABASE_URL is not set')
+    return NextResponse.json(
+      { error: 'Supabase URL is not configured' },
+      { status: 500 }
+    )
+  }
+
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error('[API] SUPABASE_SERVICE_ROLE_KEY is not set')
+    return NextResponse.json(
+      { error: 'Supabase Service Role Key is not configured' },
+      { status: 500 }
+    )
+  }
+
   // Service Role Keyを使用（RLSをバイパスして申請を作成）
   const supabase = createSupabaseClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
     {
       auth: {
         autoRefreshToken: false,
@@ -18,10 +37,18 @@ export async function POST(request: NextRequest) {
   )
 
   try {
+    console.log('[API] Parsing request body')
     const body: CreateTenantApplicationInput = await request.json()
+    console.log('[API] Request body:', {
+      company_name: body.company_name,
+      email: body.email,
+      representative_email: body.representative_email
+    })
 
     // バリデーション
+    console.log('[API] Validating required fields')
     if (!body.company_name || !body.phone || !body.email || !body.representative_name || !body.representative_email || !body.password) {
+      console.error('[API] Validation failed: missing required fields')
       return NextResponse.json(
         { error: '必須項目を入力してください' },
         { status: 400 }
@@ -29,7 +56,9 @@ export async function POST(request: NextRequest) {
     }
 
     // パスワードの長さチェック
+    console.log('[API] Validating password length')
     if (body.password.length < 8) {
+      console.error('[API] Validation failed: password too short')
       return NextResponse.json(
         { error: 'パスワードは8文字以上で設定してください' },
         { status: 400 }
@@ -37,14 +66,21 @@ export async function POST(request: NextRequest) {
     }
 
     // メールアドレスの重複チェック（既存の申請）
-    const { data: existingApplication } = await supabase
+    console.log('[API] Checking for existing application')
+    const { data: existingApplication, error: checkError } = await supabase
       .from('tenant_applications')
       .select('id')
       .eq('representative_email', body.representative_email)
       .eq('status', 'pending')
       .single()
 
+    if (checkError && checkError.code !== 'PGRST116') {
+      // PGRST116 = no rows returned (正常)
+      console.error('[API] Error checking existing application:', checkError)
+    }
+
     if (existingApplication) {
+      console.log('[API] Duplicate application found')
       return NextResponse.json(
         { error: 'このメールアドレスで申請済みです。承認をお待ちください。' },
         { status: 400 }
@@ -52,6 +88,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 申請を作成
+    console.log('[API] Creating new application')
     const { data: application, error } = await supabase
       .from('tenant_applications')
       .insert({
@@ -71,12 +108,22 @@ export async function POST(request: NextRequest) {
       .single()
 
     if (error) {
-      console.error('Application creation error:', error)
+      console.error('[API] Application creation error:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
       return NextResponse.json(
-        { error: '申請の登録に失敗しました' },
+        {
+          error: '申請の登録に失敗しました',
+          details: error.message
+        },
         { status: 500 }
       )
     }
+
+    console.log('[API] Application created successfully:', application.id)
 
     // 管理者にメール通知を送信
     try {
@@ -130,14 +177,22 @@ export async function POST(request: NextRequest) {
       console.error('Email notification error:', emailError)
     }
 
+    console.log('[API] Request completed successfully')
     return NextResponse.json({
       success: true,
       application,
     })
   } catch (error: any) {
-    console.error('Unexpected error:', error)
+    console.error('[API] Unexpected error:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    })
     return NextResponse.json(
-      { error: error.message || '予期しないエラーが発生しました' },
+      {
+        error: error.message || '予期しないエラーが発生しました',
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     )
   }
