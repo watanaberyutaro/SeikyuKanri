@@ -127,15 +127,15 @@ export default async function DashboardPage() {
       {/* 統計カード */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="border-none shadow-card hover:shadow-card-hover transition-shadow overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-green-500/10 to-emerald-500/10 rounded-bl-full" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#90cd76]/10 rounded-bl-full" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">総売上</CardTitle>
-            <div className="p-2 bg-green-100 rounded-lg">
-              <TrendingUp className="h-5 w-5 text-green-600" />
+            <div className="p-2 bg-[#90cd76]/20 rounded-lg">
+              <TrendingUp className="h-5 w-5 text-[#90cd76]" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-green-600">¥{totalRevenue.toLocaleString()}</div>
+            <div className="text-3xl font-bold text-[#90cd76]">¥{totalRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3" />
               {paidCount}件の入金済み請求書
@@ -144,15 +144,15 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="border-none shadow-card hover:shadow-card-hover transition-shadow overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-bl-full" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#c94826]/10 rounded-bl-full" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">未収金</CardTitle>
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <Wallet className="h-5 w-5 text-blue-600" />
+            <div className="p-2 bg-[#c94826]/20 rounded-lg">
+              <Wallet className="h-5 w-5 text-[#c94826]" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-blue-600">¥{pendingRevenue.toLocaleString()}</div>
+            <div className="text-3xl font-bold text-[#c94826]">¥{pendingRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
               <Clock className="h-3 w-3" />
               {sentCount}件の送付済み請求書
@@ -161,20 +161,20 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="border-none shadow-card hover:shadow-card-hover transition-shadow overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-purple-500/10 to-pink-500/10 rounded-bl-full" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#2c3744]/10 rounded-bl-full" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">今月の売上</CardTitle>
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <DollarSign className="h-5 w-5 text-purple-600" />
+            <div className="p-2 bg-[#2c3744]/20 rounded-lg">
+              <DollarSign className="h-5 w-5 text-[#2c3744]" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-purple-600">¥{thisMonthRevenue.toLocaleString()}</div>
+            <div className="text-3xl font-bold text-[#2c3744]">¥{thisMonthRevenue.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
               {growthRate >= 0 ? (
-                <TrendingUp className="h-3 w-3 text-green-600" />
+                <TrendingUp className="h-3 w-3 text-[#90cd76]" />
               ) : (
-                <TrendingUp className="h-3 w-3 text-red-600 rotate-180" />
+                <TrendingUp className="h-3 w-3 text-[#c94826] rotate-180" />
               )}
               前月比 {growthRate > 0 ? '+' : ''}{growthRate.toFixed(1)}%
             </p>
@@ -182,15 +182,15 @@ export default async function DashboardPage() {
         </Card>
 
         <Card className="border-none shadow-card hover:shadow-card-hover transition-shadow overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-gradient-to-br from-red-500/10 to-orange-500/10 rounded-bl-full" />
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#c94826]/10 rounded-bl-full" />
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">期限超過</CardTitle>
-            <div className="p-2 bg-red-100 rounded-lg">
-              <AlertTriangle className="h-5 w-5 text-red-600" />
+            <div className="p-2 bg-[#c94826]/20 rounded-lg">
+              <AlertTriangle className="h-5 w-5 text-[#c94826]" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-red-600">{overdue.length}件</div>
+            <div className="text-3xl font-bold text-[#c94826]">{overdue.length}件</div>
             <p className="text-xs text-muted-foreground mt-2">要確認の請求書</p>
           </CardContent>
         </Card>
@@ -201,8 +201,8 @@ export default async function DashboardPage() {
         <Card className="border-none shadow-card hover:shadow-card-hover transition-all">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Clock className="h-5 w-5 text-blue-600" />
+              <div className="p-2 bg-[#2c3744]/20 rounded-lg">
+                <Clock className="h-5 w-5 text-[#2c3744]" />
               </div>
               やることリスト
             </CardTitle>
@@ -223,7 +223,7 @@ export default async function DashboardPage() {
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-bold">¥{Number(invoice.total_amount).toLocaleString()}</p>
-                        <Badge variant="outline" className="mt-1 bg-blue-100 text-blue-800">
+                        <Badge variant="outline" className="mt-1 bg-[#c94826]/20 text-[#c94826]">
                           {diffDays <= 3 ? '急ぎ' : '近日'}
                         </Badge>
                       </div>
@@ -249,11 +249,11 @@ export default async function DashboardPage() {
         </Card>
 
         {/* 期限警告 */}
-        <Card className="border-none shadow-card hover:shadow-card-hover transition-all border-red-200">
+        <Card className="border-none shadow-card hover:shadow-card-hover transition-all border-[#c94826]/30">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div className="p-2 bg-[#c94826]/20 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-[#c94826]" />
               </div>
               期限超過の警告
             </CardTitle>
@@ -265,16 +265,16 @@ export default async function DashboardPage() {
                   const dueDate = new Date(invoice.due_date!)
                   const diffDays = Math.abs(Math.ceil((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24)))
                   return (
-                    <div key={invoice.invoice_number} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                    <div key={invoice.invoice_number} className="flex items-center justify-between p-3 bg-[#c94826]/10 rounded-lg border border-[#c94826]/30">
                       <div>
                         <p className="text-sm font-medium">{invoice.invoice_number}</p>
-                        <p className="text-xs text-red-600 font-medium">
+                        <p className="text-xs text-[#c94826] font-medium">
                           期限: {invoice.due_date}（{diffDays}日超過）
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="text-sm font-bold">¥{Number(invoice.total_amount).toLocaleString()}</p>
-                        <Badge variant="outline" className="mt-1 bg-red-100 text-red-800">
+                        <Badge variant="outline" className="mt-1 bg-[#c94826]/20 text-[#c94826]">
                           要確認
                         </Badge>
                       </div>
@@ -290,7 +290,7 @@ export default async function DashboardPage() {
               </div>
             ) : (
               <div className="text-center py-8">
-                <CheckCircle2 className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                <CheckCircle2 className="h-12 w-12 text-[#90cd76] mx-auto mb-3" />
                 <p className="text-sm text-muted-foreground">
                   期限超過の請求書はありません
                 </p>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createInvoice } from '../actions'
+import { createCompanyInline } from '@/app/companies/actions'
 import { Button } from '@/components/ui/button'
 import { InvoiceForm } from '@/components/invoices/invoice-form'
 import { InvoicePreview } from '@/components/invoices/invoice-preview'
@@ -23,6 +24,11 @@ type TenantInfo = {
   phone?: string
   email?: string
   company_seal_url?: string
+  bank_name?: string
+  bank_branch?: string
+  bank_account_type?: string
+  bank_account_number?: string
+  bank_account_holder?: string
 }
 
 type CompanyInfo = {
@@ -96,7 +102,7 @@ export default function NewInvoicePage() {
           if (profile?.tenant_id) {
             const { data: tenant } = await supabase
               .from('tenants')
-              .select('company_name, invoice_registration_number, postal_code, address, phone, email, company_seal_url')
+              .select('company_name, invoice_registration_number, postal_code, address, phone, email, company_seal_url, bank_name, bank_branch, bank_account_type, bank_account_number, bank_account_holder')
               .eq('id', profile.tenant_id)
               .single()
 
@@ -109,6 +115,11 @@ export default function NewInvoicePage() {
                 phone: tenant.phone || undefined,
                 email: tenant.email || undefined,
                 company_seal_url: tenant.company_seal_url || undefined,
+                bank_name: tenant.bank_name || undefined,
+                bank_branch: tenant.bank_branch || undefined,
+                bank_account_type: tenant.bank_account_type || undefined,
+                bank_account_number: tenant.bank_account_number || undefined,
+                bank_account_holder: tenant.bank_account_holder || undefined,
               })
             }
           }
@@ -133,6 +144,30 @@ export default function NewInvoicePage() {
       setError(result.error)
       setLoading(false)
     }
+  }
+
+  const handleCreateCompany = async (companyData: {
+    name: string
+    postal_code?: string
+    address?: string
+    contact_person?: string
+    phone?: string
+    email?: string
+  }) => {
+    const newCompany = await createCompanyInline(companyData)
+
+    // 企業リストを更新
+    setCompanies(prev => [...prev, {
+      id: newCompany.id,
+      name: newCompany.name,
+      postal_code: companyData.postal_code,
+      address: companyData.address,
+      contact_person: companyData.contact_person,
+      phone: companyData.phone,
+      email: companyData.email,
+    }])
+
+    return newCompany
   }
 
   const handleFormChange = (data: {
@@ -203,6 +238,7 @@ export default function NewInvoicePage() {
             }}
             onSubmit={handleSubmit}
             onChange={handleFormChange}
+            onCreateCompany={handleCreateCompany}
             loading={loading}
           />
         </div>
@@ -213,17 +249,19 @@ export default function NewInvoicePage() {
             <h2 className="text-lg font-semibold text-gray-900">プレビュー</h2>
             <p className="text-sm text-gray-600">入力内容がリアルタイムで反映されます</p>
           </div>
-          <InvoicePreview
-            tenantInfo={tenantInfo}
-            companyInfo={companyInfo}
-            invoiceNumber={previewData.invoice_number}
-            title={previewData.title}
-            issueDate={previewData.issue_date}
-            dueDate={previewData.due_date}
-            items={previewData.items}
-            notes={previewData.notes}
-            terms={previewData.terms}
-          />
+          <div className="origin-top scale-75">
+            <InvoicePreview
+              tenantInfo={tenantInfo}
+              companyInfo={companyInfo}
+              invoiceNumber={previewData.invoice_number}
+              title={previewData.title}
+              issueDate={previewData.issue_date}
+              dueDate={previewData.due_date}
+              items={previewData.items}
+              notes={previewData.notes}
+              terms={previewData.terms}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -29,9 +29,9 @@ const statusLabels = {
 }
 
 const statusColors = {
-  pending: 'text-yellow-800',
-  sent: 'text-blue-800',
-  paid: 'text-green-800',
+  pending: 'text-[#c94826]',
+  sent: 'text-[#2c3744]',
+  paid: 'text-[#90cd76]',
 }
 
 type InvoiceStatusSelectProps = {
@@ -99,13 +99,13 @@ export function InvoiceStatusSelect({ invoiceId, currentStatus }: InvoiceStatusS
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="pending" className="text-yellow-800">
+          <SelectItem value="pending" className="text-[#c94826]">
             {statusLabels.pending}
           </SelectItem>
-          <SelectItem value="sent" className="text-blue-800">
+          <SelectItem value="sent" className="text-[#2c3744]">
             {statusLabels.sent}
           </SelectItem>
-          <SelectItem value="paid" className="text-green-800">
+          <SelectItem value="paid" className="text-[#90cd76]">
             {statusLabels.paid}
           </SelectItem>
         </SelectContent>

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import { updateQuote } from '../../actions'
+import { createCompanyInline } from '@/app/companies/actions'
 import { Button } from '@/components/ui/button'
 import { QuoteForm } from '@/components/quotes/quote-form'
 import { createClient } from '@/lib/supabase/client'
@@ -69,6 +70,19 @@ export default function EditQuotePage() {
     }
   }
 
+  const handleCreateCompany = async (companyData: {
+    name: string
+    postal_code?: string
+    address?: string
+    contact_person?: string
+    phone?: string
+    email?: string
+  }) => {
+    const newCompany = await createCompanyInline(companyData)
+    setCompanies(prev => [...prev, { id: newCompany.id, name: newCompany.name }])
+    return newCompany
+  }
+
   if (!quote) {
     return <div className="text-center py-8">読み込み中...</div>
   }
@@ -91,7 +105,7 @@ export default function EditQuotePage() {
         </div>
       )}
 
-      <QuoteForm companies={companies} initialData={quote} onSubmit={handleSubmit} loading={loading} />
+      <QuoteForm companies={companies} initialData={quote} onSubmit={handleSubmit} onCreateCompany={handleCreateCompany} loading={loading} />
     </div>
   )
 }

@@ -20,8 +20,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from '@dnd-kit/core'
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
+import { GripVertical, Copy } from 'lucide-react'
 
 type QuoteItem = {
+  id: string
   description: string
   quantity: number
   unit_price: number
@@ -33,6 +52,134 @@ type TaxRate = {
   id: string
   name: string
   rate: number
+}
+
+// Sortable Item Component
+function SortableQuoteItem({
+  item,
+  taxRates,
+  loading,
+  onUpdate,
+  onRemove,
+  onDuplicate,
+  canRemove,
+}: {
+  item: QuoteItem
+  taxRates: TaxRate[]
+  loading: boolean
+  onUpdate: (id: string, field: keyof QuoteItem, value: string | number) => void
+  onRemove: (id: string) => void
+  onDuplicate: (id: string) => void
+  canRemove: boolean
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: item.id })
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  }
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className="space-y-2"
+    >
+      <div className="flex gap-2 items-start">
+        {/* Drag Handle */}
+        <button
+          type="button"
+          className="cursor-grab active:cursor-grabbing mt-2 text-gray-400 hover:text-gray-600"
+          {...attributes}
+          {...listeners}
+        >
+          <GripVertical className="w-5 h-5" />
+        </button>
+
+        <div className="flex-1 space-y-2">
+          <Input
+            placeholder="品目・内容"
+            value={item.description}
+            onChange={(e) => onUpdate(item.id, 'description', e.target.value)}
+            disabled={loading}
+          />
+        </div>
+        <div className="w-24 space-y-2">
+          <Input
+            type="number"
+            placeholder="数量"
+            value={item.quantity}
+            onChange={(e) => onUpdate(item.id, 'quantity', Number(e.target.value))}
+            disabled={loading}
+            min="0"
+            step="0.01"
+          />
+        </div>
+        <div className="w-32 space-y-2">
+          <Input
+            type="number"
+            placeholder="単価"
+            value={item.unit_price}
+            onChange={(e) => onUpdate(item.id, 'unit_price', Number(e.target.value))}
+            disabled={loading}
+            min="0"
+          />
+        </div>
+        <div className="w-40 space-y-2">
+          <Select
+            value={item.tax_rate_id}
+            onValueChange={(value) => onUpdate(item.id, 'tax_rate_id', value)}
+            disabled={loading}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="税区分" />
+            </SelectTrigger>
+            <SelectContent>
+              {taxRates.map((taxRate) => (
+                <SelectItem key={taxRate.id} value={taxRate.id}>
+                  {taxRate.name} ({taxRate.rate}%)
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="w-32 space-y-2">
+          <Input value={`¥${item.amount.toLocaleString()}`} disabled />
+        </div>
+
+        {/* Duplicate Button */}
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => onDuplicate(item.id)}
+          disabled={loading}
+          title="この項目を複製"
+        >
+          <Copy className="w-4 h-4" />
+        </Button>
+
+        {/* Delete Button */}
+        <Button
+          type="button"
+          variant="destructive"
+          size="sm"
+          onClick={() => onRemove(item.id)}
+          disabled={loading || !canRemove}
+        >
+          削除
+        </Button>
+      </div>
+    </div>
+  )
 }
 
 type QuoteFormProps = {
@@ -59,7 +206,7 @@ type QuoteFormProps = {
   loading: boolean
 }
 
-export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFormProps) {
+export function QuoteForm({ companies, initialData, onSubmit, onCreateCompany, loading }: QuoteFormProps) {
   const [companyId, setCompanyId] = useState(initialData?.company_id || '')
   const [quoteNumber, setQuoteNumber] = useState(initialData?.quote_number || '')
   const [title, setTitle] = useState(initialData?.title || '')
@@ -68,8 +215,20 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
   const [notes, setNotes] = useState(initialData?.notes || '')
   const [terms, setTerms] = useState(initialData?.terms || '')
   const [items, setItems] = useState<QuoteItem[]>(
-    initialData?.items || [{ description: '', quantity: 1, unit_price: 0, amount: 0 }]
+    initialData?.items.map(item => ({
+      ...item,
+      id: item.id || crypto.randomUUID()
+    })) || [{ id: crypto.randomUUID(), description: '', quantity: 1, unit_price: 0, amount: 0 }]
   )
+
+  const [showNewCompanyDialog, setShowNewCompanyDialog] = useState(false)
+  const [newCompanyName, setNewCompanyName] = useState('')
+  const [newCompanyPostalCode, setNewCompanyPostalCode] = useState('')
+  const [newCompanyAddress, setNewCompanyAddress] = useState('')
+  const [newCompanyContactPerson, setNewCompanyContactPerson] = useState('')
+  const [newCompanyPhone, setNewCompanyPhone] = useState('')
+  const [newCompanyEmail, setNewCompanyEmail] = useState('')
+  const [creatingCompany, setCreatingCompany] = useState(false)
 
   // 税率マスタ
   const [taxRates, setTaxRates] = useState<TaxRate[]>([])
@@ -90,10 +249,18 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
     fetchTaxRates()
   }, [])
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  )
+
   const addItem = () => {
     // デフォルトで10%の税率を選択
     const defaultTaxRate = taxRates.find(tr => tr.rate === 10)
     setItems([...items, {
+      id: crypto.randomUUID(),
       description: '',
       quantity: 1,
       unit_price: 0,
@@ -102,17 +269,49 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
     }])
   }
 
-  const removeItem = (index: number) => {
-    setItems(items.filter((_, i) => i !== index))
+  const removeItem = (id: string) => {
+    setItems(items.filter((item) => item.id !== id))
   }
 
-  const updateItem = (index: number, field: keyof QuoteItem, value: string | number) => {
-    const newItems = [...items]
-    newItems[index] = { ...newItems[index], [field]: value }
-
-    if (field === 'quantity' || field === 'unit_price') {
-      newItems[index].amount = newItems[index].quantity * newItems[index].unit_price
+  const duplicateItem = (id: string) => {
+    const itemToDuplicate = items.find(item => item.id === id)
+    if (itemToDuplicate) {
+      const newItem = {
+        ...itemToDuplicate,
+        id: crypto.randomUUID()
+      }
+      const index = items.findIndex(item => item.id === id)
+      const newItems = [...items]
+      newItems.splice(index + 1, 0, newItem)
+      setItems(newItems)
     }
+  }
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event
+
+    if (over && active.id !== over.id) {
+      setItems((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id)
+        const newIndex = items.findIndex((item) => item.id === over.id)
+
+        return arrayMove(items, oldIndex, newIndex)
+      })
+    }
+  }
+
+  const updateItem = (id: string, field: keyof QuoteItem, value: string | number) => {
+    const newItems = items.map(item => {
+      if (item.id === id) {
+        const updatedItem = { ...item, [field]: value }
+        // 数量または単価が変更された場合、金額を再計算
+        if (field === 'quantity' || field === 'unit_price') {
+          updatedItem.amount = updatedItem.quantity * updatedItem.unit_price
+        }
+        return updatedItem
+      }
+      return item
+    })
 
     setItems(newItems)
   }
@@ -131,6 +330,35 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
 
   const calculateTotal = () => {
     return calculateSubtotal() + calculateTax()
+  }
+
+  const handleCreateCompany = async () => {
+    if (!onCreateCompany || !newCompanyName.trim()) return
+
+    setCreatingCompany(true)
+    try {
+      const newCompany = await onCreateCompany({
+        name: newCompanyName.trim(),
+        postal_code: newCompanyPostalCode || undefined,
+        address: newCompanyAddress || undefined,
+        contact_person: newCompanyContactPerson || undefined,
+        phone: newCompanyPhone || undefined,
+        email: newCompanyEmail || undefined,
+      })
+
+      setCompanyId(newCompany.id)
+      setShowNewCompanyDialog(false)
+      setNewCompanyName('')
+      setNewCompanyPostalCode('')
+      setNewCompanyAddress('')
+      setNewCompanyContactPerson('')
+      setNewCompanyPhone('')
+      setNewCompanyEmail('')
+    } catch (error) {
+      console.error('企業作成に失敗しました:', error)
+    } finally {
+      setCreatingCompany(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -158,18 +386,130 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="company_id">見積先企業 *</Label>
-              <Select value={companyId} onValueChange={setCompanyId} required disabled={loading}>
-                <SelectTrigger>
-                  <SelectValue placeholder="企業を選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  {companies.map((company) => (
-                    <SelectItem key={company.id} value={company.id}>
-                      {company.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <div className="flex gap-2">
+                <Select
+                  value={companyId}
+                  onValueChange={(value) => {
+                    if (value === "__create_new__") {
+                      setShowNewCompanyDialog(true)
+                    } else {
+                      setCompanyId(value)
+                    }
+                  }}
+                  required
+                  disabled={loading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="企業を選択" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {onCreateCompany && (
+                      <SelectItem value="__create_new__" className="text-blue-600 font-medium">
+                        + 新規企業を追加
+                      </SelectItem>
+                    )}
+                    {companies.map((company) => (
+                      <SelectItem key={company.id} value={company.id}>
+                        {company.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {onCreateCompany && (
+                  <Dialog open={showNewCompanyDialog} onOpenChange={setShowNewCompanyDialog}>
+                    <DialogTrigger asChild>
+                      <Button type="button" variant="outline" size="sm" disabled={loading}>
+                        + 新規
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>新規企業追加</DialogTitle>
+                      </DialogHeader>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="new_company_name">企業名 *</Label>
+                          <Input
+                            id="new_company_name"
+                            value={newCompanyName}
+                            onChange={(e) => setNewCompanyName(e.target.value)}
+                            placeholder="株式会社サンプル"
+                            disabled={creatingCompany}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="new_company_postal_code">郵便番号</Label>
+                          <Input
+                            id="new_company_postal_code"
+                            value={newCompanyPostalCode}
+                            onChange={(e) => setNewCompanyPostalCode(e.target.value)}
+                            placeholder="123-4567"
+                            disabled={creatingCompany}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="new_company_address">住所</Label>
+                          <Input
+                            id="new_company_address"
+                            value={newCompanyAddress}
+                            onChange={(e) => setNewCompanyAddress(e.target.value)}
+                            placeholder="東京都渋谷区..."
+                            disabled={creatingCompany}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="new_company_contact_person">担当者</Label>
+                          <Input
+                            id="new_company_contact_person"
+                            value={newCompanyContactPerson}
+                            onChange={(e) => setNewCompanyContactPerson(e.target.value)}
+                            placeholder="田中 太郎"
+                            disabled={creatingCompany}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="new_company_phone">電話番号</Label>
+                          <Input
+                            id="new_company_phone"
+                            value={newCompanyPhone}
+                            onChange={(e) => setNewCompanyPhone(e.target.value)}
+                            placeholder="03-1234-5678"
+                            disabled={creatingCompany}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="new_company_email">メールアドレス</Label>
+                          <Input
+                            id="new_company_email"
+                            type="email"
+                            value={newCompanyEmail}
+                            onChange={(e) => setNewCompanyEmail(e.target.value)}
+                            placeholder="info@sample.co.jp"
+                            disabled={creatingCompany}
+                          />
+                        </div>
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setShowNewCompanyDialog(false)}
+                            disabled={creatingCompany}
+                          >
+                            キャンセル
+                          </Button>
+                          <Button
+                            type="button"
+                            onClick={handleCreateCompany}
+                            disabled={creatingCompany || !newCompanyName.trim()}
+                          >
+                            {creatingCompany ? '作成中...' : '作成'}
+                          </Button>
+                        </div>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
+                )}
+              </div>
             </div>
 
             <div className="space-y-2">
@@ -232,71 +572,29 @@ export function QuoteForm({ companies, initialData, onSubmit, loading }: QuoteFo
           </Button>
         </CardHeader>
         <CardContent className="space-y-4">
-          {items.map((item, index) => (
-            <div key={index} className="space-y-2">
-              <div className="flex gap-2 items-start">
-                <div className="flex-1 space-y-2">
-                  <Input
-                    placeholder="品目・内容"
-                    value={item.description}
-                    onChange={(e) => updateItem(index, 'description', e.target.value)}
-                    disabled={loading}
-                  />
-                </div>
-                <div className="w-24 space-y-2">
-                  <Input
-                    type="number"
-                    placeholder="数量"
-                    value={item.quantity}
-                    onChange={(e) => updateItem(index, 'quantity', Number(e.target.value))}
-                    disabled={loading}
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-                <div className="w-32 space-y-2">
-                  <Input
-                    type="number"
-                    placeholder="単価"
-                    value={item.unit_price}
-                    onChange={(e) => updateItem(index, 'unit_price', Number(e.target.value))}
-                    disabled={loading}
-                    min="0"
-                  />
-                </div>
-                <div className="w-40 space-y-2">
-                  <Select
-                    value={item.tax_rate_id}
-                    onValueChange={(value) => updateItem(index, 'tax_rate_id', value)}
-                    disabled={loading}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="税区分" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {taxRates.map((taxRate) => (
-                        <SelectItem key={taxRate.id} value={taxRate.id}>
-                          {taxRate.name} ({taxRate.rate}%)
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="w-32 space-y-2">
-                  <Input value={`¥${item.amount.toLocaleString()}`} disabled />
-                </div>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  size="sm"
-                  onClick={() => removeItem(index)}
-                  disabled={loading || items.length === 1}
-              >
-                削除
-              </Button>
-            </div>
-          </div>
-          ))}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={items.map(item => item.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {items.map((item) => (
+                <SortableQuoteItem
+                  key={item.id}
+                  item={item}
+                  taxRates={taxRates}
+                  loading={loading}
+                  onUpdate={updateItem}
+                  onRemove={removeItem}
+                  onDuplicate={duplicateItem}
+                  canRemove={items.length > 1}
+                />
+              ))}
+            </SortableContext>
+          </DndContext>
 
           <div className="border-t pt-4 space-y-2">
             <div className="flex justify-end">

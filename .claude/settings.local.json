@@ -22,7 +22,14 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(git remote add:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(pkill:*)",
+      "Bash(git diff:*)",
+      "Bash(git reset:*)",
+      "Bash(ls:*)",
+      "Bash(node -e:*)",
+      "Bash(node /tmp/replace-gray-colors.js:*)",
+      "Bash(node /tmp/replace-white.js:*)"
     ],
     "deny": [],
     "ask": []

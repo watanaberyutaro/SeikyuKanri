@@ -23,6 +23,11 @@ interface TenantSettings {
   website?: string
   description?: string
   company_seal_url?: string
+  bank_name?: string
+  bank_branch?: string
+  bank_account_type?: string
+  bank_account_number?: string
+  bank_account_holder?: string
 }
 
 export default function SettingsEditPage() {
@@ -96,6 +101,11 @@ export default function SettingsEditPage() {
           website: tenant.website || '',
           description: tenant.description || '',
           company_seal_url: tenant.company_seal_url || '',
+          bank_name: tenant.bank_name || '',
+          bank_branch: tenant.bank_branch || '',
+          bank_account_type: tenant.bank_account_type || '',
+          bank_account_number: tenant.bank_account_number || '',
+          bank_account_holder: tenant.bank_account_holder || '',
         })
         setPreviewUrl(tenant.company_seal_url || null)
       }
@@ -119,6 +129,11 @@ export default function SettingsEditPage() {
         email: settings.email,
         website: settings.website,
         description: settings.description,
+        bank_name: settings.bank_name,
+        bank_branch: settings.bank_branch,
+        bank_account_type: settings.bank_account_type,
+        bank_account_number: settings.bank_account_number,
+        bank_account_holder: settings.bank_account_holder,
       })
 
       if (result?.error) {
@@ -149,15 +164,32 @@ export default function SettingsEditPage() {
 
       const result = await uploadCompanySeal(formData)
 
+      console.log('Upload result:', result)
+
       if (result?.error) {
-        alert(`エラー: ${result.error}`)
+        console.error('Upload error:', result)
+
+        // より詳細なエラーメッセージを表示
+        if (result.error.includes('バケット') || result.error.includes('bucket')) {
+          alert(
+            `エラー: ${result.error}\n\n` +
+            `Supabaseダッシュボードで「company-seals」バケットを作成してください。\n` +
+            `詳細は上部の黄色い注意書きを確認してください。`
+          )
+        } else {
+          alert(`エラー: ${result.error}`)
+        }
       } else if (result?.url) {
         alert('ハンコをアップロードしました')
         setPreviewUrl(result.url)
         setSettings({ ...settings, company_seal_url: result.url })
       }
     } catch (error: any) {
-      alert(`エラー: ${error.message}`)
+      console.error('Upload exception:', error)
+      alert(
+        `エラー: ${error.message}\n\n` +
+        `予期しないエラーが発生しました。ブラウザのコンソール（F12）を確認してください。`
+      )
     } finally {
       setUploading(false)
       // Reset file input
@@ -377,16 +409,130 @@ ADD COLUMN IF NOT EXISTS description TEXT;`}
         </CardContent>
       </Card>
 
+      {/* 振込先口座情報 */}
+      <Card>
+        <CardHeader>
+          <CardTitle>振込先口座情報</CardTitle>
+          <p className="text-sm text-gray-600 mt-1">
+            請求書に記載される振込先口座情報を設定してください
+          </p>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bank_name">銀行名</Label>
+              <Input
+                id="bank_name"
+                value={settings.bank_name || ''}
+                onChange={(e) =>
+                  setSettings({ ...settings, bank_name: e.target.value })
+                }
+                placeholder="例: 三菱UFJ銀行"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bank_branch">支店名</Label>
+              <Input
+                id="bank_branch"
+                value={settings.bank_branch || ''}
+                onChange={(e) =>
+                  setSettings({ ...settings, bank_branch: e.target.value })
+                }
+                placeholder="例: 渋谷支店"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="bank_account_type">口座種別</Label>
+              <Input
+                id="bank_account_type"
+                value={settings.bank_account_type || ''}
+                onChange={(e) =>
+                  setSettings({ ...settings, bank_account_type: e.target.value })
+                }
+                placeholder="例: 普通"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="bank_account_number">口座番号</Label>
+              <Input
+                id="bank_account_number"
+                value={settings.bank_account_number || ''}
+                onChange={(e) =>
+                  setSettings({ ...settings, bank_account_number: e.target.value })
+                }
+                placeholder="例: 1234567"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="bank_account_holder">口座名義</Label>
+            <Input
+              id="bank_account_holder"
+              value={settings.bank_account_holder || ''}
+              onChange={(e) =>
+                setSettings({ ...settings, bank_account_holder: e.target.value })
+              }
+              placeholder="例: カ）サンプルカイシャ"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
       {/* 電子印（ハンコ） */}
       <Card>
         <CardHeader>
           <CardTitle>電子印（ハンコ）</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p className="text-sm font-medium text-yellow-900 mb-2">
+              ⚠️ 初回セットアップが必要です
+            </p>
+            <p className="text-sm text-yellow-800 mb-2">
+              電子印をアップロードするには、Supabase Storageでバケットとポリシーを設定する必要があります。
+            </p>
+            <details className="text-sm text-yellow-800">
+              <summary className="cursor-pointer font-medium mb-2">セットアップ手順（2ステップ）</summary>
+
+              <div className="mt-2 mb-3">
+                <p className="font-semibold mb-1">ステップ1: バケットを作成</p>
+                <ol className="list-decimal list-inside space-y-1 ml-2">
+                  <li>Supabaseダッシュボードにアクセス: <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="underline">https://supabase.com/dashboard</a></li>
+                  <li>プロジェクトを選択</li>
+                  <li>左メニューから「Storage」をクリック</li>
+                  <li>「Create a new bucket」をクリック</li>
+                  <li>バケット名に「<strong>company-seals</strong>」と入力</li>
+                  <li>「Public bucket」をONにする</li>
+                  <li>「Save」をクリック</li>
+                </ol>
+              </div>
+
+              <div className="mt-2 mb-2">
+                <p className="font-semibold mb-1">ステップ2: ポリシーを設定（重要）</p>
+                <ol className="list-decimal list-inside space-y-1 ml-2">
+                  <li>「SQL Editor」タブをクリック</li>
+                  <li>プロジェクトルートの「<strong>supabase-storage-policies.sql</strong>」を開く</li>
+                  <li>内容をコピーしてSQL Editorにペースト</li>
+                  <li>「Run」をクリックして実行</li>
+                </ol>
+              </div>
+
+              <p className="text-xs mt-2">
+                詳細は <strong>STORAGE_SETUP.md</strong> を参照してください
+              </p>
+            </details>
+          </div>
+
           <p className="text-sm text-muted-foreground">
             請求書などに押印する電子印の画像をアップロードできます。
             <br />
-            対応形式: PNG, JPEG, GIF（最大2MB）
+            対応形式: PNG, JPEG, GIF（最大10MB）
           </p>
 
           {previewUrl && (

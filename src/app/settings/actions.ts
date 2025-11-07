@@ -13,6 +13,11 @@ export async function updateTenantSettings(data: {
   email?: string
   website?: string
   description?: string
+  bank_name?: string
+  bank_branch?: string
+  bank_account_type?: string
+  bank_account_number?: string
+  bank_account_holder?: string
 }) {
   const supabase = await createClient()
 
@@ -46,6 +51,11 @@ export async function updateTenantSettings(data: {
     email: data.email || null,
     website: data.website || null,
     description: data.description || null,
+    bank_name: data.bank_name || null,
+    bank_branch: data.bank_branch || null,
+    bank_account_type: data.bank_account_type || null,
+    bank_account_number: data.bank_account_number || null,
+    bank_account_holder: data.bank_account_holder || null,
     updated_at: new Date().toISOString(),
   }
 
@@ -104,9 +114,9 @@ export async function uploadCompanySeal(formData: FormData) {
     return { error: 'ファイルが選択されていません' }
   }
 
-  // ファイルサイズチェック（2MB以下）
-  if (file.size > 2 * 1024 * 1024) {
-    return { error: 'ファイルサイズは2MB以下にしてください' }
+  // ファイルサイズチェック（10MB以下）
+  if (file.size > 10 * 1024 * 1024) {
+    return { error: 'ファイルサイズは10MB以下にしてください' }
   }
 
   // ファイル形式チェック
@@ -121,21 +131,41 @@ export async function uploadCompanySeal(formData: FormData) {
   const filePath = `company-seals/${fileName}`
 
   // Supabase Storageにアップロード
+  console.log('Uploading file:', { filePath, fileType: file.type, fileSize: file.size })
+
   const { data: uploadData, error: uploadError } = await supabase.storage
-    .from('public')
+    .from('company-seals')
     .upload(filePath, file, {
       cacheControl: '3600',
       upsert: false,
     })
 
+  console.log('Upload result:', { uploadData, uploadError })
+
   if (uploadError) {
+    console.error('Upload error details:', uploadError)
+    // より詳細なエラーメッセージを返す
+    if (uploadError.message.includes('not found') || uploadError.message.includes('does not exist')) {
+      return {
+        error: 'Supabase Storageの「company-seals」バケットが存在しません。Supabaseダッシュボードで作成してください。',
+        details: uploadError.message
+      }
+    }
+    if (uploadError.message.includes('row-level security') || uploadError.message.includes('policy')) {
+      return {
+        error: 'ストレージポリシーが設定されていません。Supabaseダッシュボードで「SQL Editor」を開き、プロジェクトルートの「supabase-storage-policies.sql」を実行してください。詳細は STORAGE_SETUP.md を参照してください。',
+        details: uploadError.message
+      }
+    }
     return { error: `アップロード失敗: ${uploadError.message}` }
   }
 
   // 公開URLを取得
   const {
     data: { publicUrl },
-  } = supabase.storage.from('public').getPublicUrl(filePath)
+  } = supabase.storage.from('company-seals').getPublicUrl(filePath)
+
+  console.log('Public URL:', publicUrl)
 
   // テナント情報を更新
   const { error: updateError } = await supabase
@@ -148,7 +178,7 @@ export async function uploadCompanySeal(formData: FormData) {
 
   if (updateError) {
     // アップロードしたファイルを削除
-    await supabase.storage.from('public').remove([filePath])
+    await supabase.storage.from('company-seals').remove([filePath])
     return { error: `更新失敗: ${updateError.message}` }
   }
 
@@ -191,7 +221,7 @@ export async function deleteCompanySeal() {
     const filePath = url.pathname.split('/').slice(-2).join('/')
 
     // Storageから削除
-    await supabase.storage.from('public').remove([filePath])
+    await supabase.storage.from('company-seals').remove([filePath])
   }
 
   // テナント情報を更新（URLをnullに）

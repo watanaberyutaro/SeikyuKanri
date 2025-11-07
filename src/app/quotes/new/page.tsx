@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createQuote } from '../actions'
+import { createCompanyInline } from '@/app/companies/actions'
 import { Button } from '@/components/ui/button'
 import { QuoteForm } from '@/components/quotes/quote-form'
 import { createClient } from '@/lib/supabase/client'
@@ -34,6 +35,19 @@ export default function NewQuotePage() {
     }
   }
 
+  const handleCreateCompany = async (companyData: {
+    name: string
+    postal_code?: string
+    address?: string
+    contact_person?: string
+    phone?: string
+    email?: string
+  }) => {
+    const newCompany = await createCompanyInline(companyData)
+    setCompanies(prev => [...prev, { id: newCompany.id, name: newCompany.name }])
+    return newCompany
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
@@ -52,7 +66,7 @@ export default function NewQuotePage() {
         </div>
       )}
 
-      <QuoteForm companies={companies} onSubmit={handleSubmit} loading={loading} />
+      <QuoteForm companies={companies} onSubmit={handleSubmit} onCreateCompany={handleCreateCompany} loading={loading} />
     </div>
   )
 }

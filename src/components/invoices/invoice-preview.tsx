@@ -17,6 +17,11 @@ type TenantInfo = {
   phone?: string
   email?: string
   company_seal_url?: string
+  bank_name?: string
+  bank_branch?: string
+  bank_account_type?: string
+  bank_account_number?: string
+  bank_account_holder?: string
 }
 
 type CompanyInfo = {
@@ -268,6 +273,45 @@ export function InvoicePreview({
             <div className="text-sm font-medium mb-1">備考</div>
             <div className="text-sm text-muted-foreground whitespace-pre-wrap border-l-4 border-primary/20 pl-3 py-2">
               {notes}
+            </div>
+          </div>
+        )}
+
+        {/* 振込先口座情報 */}
+        {tenantInfo && (tenantInfo.bank_name || tenantInfo.bank_branch || tenantInfo.bank_account_type || tenantInfo.bank_account_number || tenantInfo.bank_account_holder) && (
+          <div className="border-t pt-4 mt-6">
+            <div className="text-sm font-medium mb-2">お振込先</div>
+            <div className="text-sm space-y-1 bg-muted/30 p-3 rounded">
+              {tenantInfo.bank_name && (
+                <div>
+                  <span className="text-muted-foreground">銀行名:</span>
+                  <span className="ml-2 font-medium">{tenantInfo.bank_name}</span>
+                </div>
+              )}
+              {tenantInfo.bank_branch && (
+                <div>
+                  <span className="text-muted-foreground">支店名:</span>
+                  <span className="ml-2 font-medium">{tenantInfo.bank_branch}</span>
+                </div>
+              )}
+              {tenantInfo.bank_account_type && (
+                <div>
+                  <span className="text-muted-foreground">口座種別:</span>
+                  <span className="ml-2 font-medium">{tenantInfo.bank_account_type}</span>
+                </div>
+              )}
+              {tenantInfo.bank_account_number && (
+                <div>
+                  <span className="text-muted-foreground">口座番号:</span>
+                  <span className="ml-2 font-medium">{tenantInfo.bank_account_number}</span>
+                </div>
+              )}
+              {tenantInfo.bank_account_holder && (
+                <div>
+                  <span className="text-muted-foreground">口座名義:</span>
+                  <span className="ml-2 font-medium">{tenantInfo.bank_account_holder}</span>
+                </div>
+              )}
             </div>
           </div>
         )}
