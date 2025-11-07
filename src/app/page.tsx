@@ -143,7 +143,7 @@ export default async function LandingPage() {
             </div>
             <div className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              <span className="text-sm md:text-base font-medium">ISO27001認証取得</span>
+              <span className="text-sm md:text-base font-medium">SSL/TLS暗号化通信</span>
             </div>
           </div>
         </div>
@@ -299,58 +299,6 @@ export default async function LandingPage() {
         </div>
       </section>
 
-      {/* お客様の声 */}
-      <section className="container mx-auto px-4 py-16 md:py-24">
-        <div className="text-center mb-12 md:mb-16">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-            お客様の<span className="text-[#2c3744]">声</span>
-          </h2>
-          <p className="text-lg md:text-xl text-[#2c3744]/70">
-            導入企業様からの評価
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-          {[
-            {
-              company: '株式会社テックソリューション',
-              industry: 'IT・ソフトウェア業',
-              comment: '請求書作成の時間が1/10になりました。経理担当者の負担が大幅に軽減され、本来の業務に集中できるようになりました。',
-              rating: 5
-            },
-            {
-              company: '山田商事株式会社',
-              industry: '卸売業',
-              comment: '売掛金の管理が劇的に改善。入金漏れがなくなり、キャッシュフローが安定しました。導入して本当に良かったです。',
-              rating: 5
-            },
-            {
-              company: 'ABC株式会社',
-              industry: '製造業',
-              comment: '複雑な会計処理もスムーズに。サポート体制も充実していて、安心して使えます。コストパフォーマンスも最高です。',
-              rating: 5
-            }
-          ].map((testimonial, i) => (
-            <Card key={i} className="border-2 hover:shadow-xl transition-all">
-              <CardContent className="pt-6">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, j) => (
-                    <Star key={j} className="h-5 w-5 fill-[#90cd76] text-[#90cd76]" />
-                  ))}
-                </div>
-                <p className="text-[#2c3744]/90 mb-6 leading-relaxed italic">
-                  "{testimonial.comment}"
-                </p>
-                <div className="border-t pt-4">
-                  <p className="font-bold text-[#2c3744]">{testimonial.company}</p>
-                  <p className="text-sm text-[#2c3744]/60 mt-1">{testimonial.industry}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </section>
-
       {/* セキュリティ・信頼性 */}
       <section className="bg-gradient-to-br from-[#2c3744] to-[#2c3744] text-[#fffff8] py-16 md:py-24">
         <div className="container mx-auto px-4">
@@ -366,7 +314,7 @@ export default async function LandingPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
             {[
               { icon: Lock, title: 'データ暗号化', desc: 'AES-256による暗号化' },
-              { icon: Shield, title: 'ISO27001認証', desc: '国際セキュリティ基準' },
+              { icon: Shield, title: 'SSL/TLS通信', desc: '安全な通信環境' },
               { icon: Globe, title: 'バックアップ', desc: '99.99%データ保全率' },
               { icon: HeadphonesIcon, title: '24時間サポート', desc: '専門スタッフが対応' }
             ].map((item, i) => (
@@ -409,7 +357,7 @@ export default async function LandingPage() {
             },
             {
               q: 'セキュリティは大丈夫ですか？',
-              a: 'ISO27001認証を取得しており、金融機関レベルのセキュリティを実現しています。データは全て暗号化され、定期的なバックアップも実施しています。'
+              a: 'SSL/TLS通信とAES-256暗号化により、金融機関レベルのセキュリティを実現しています。データは全て暗号化され、定期的なバックアップも実施しています。'
             }
           ].map((faq, i) => (
             <Card key={i} className="border-2 hover:border-[#2c3744] transition-all">
