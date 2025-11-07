@@ -10,6 +10,7 @@ import { InvoicePreview } from '@/components/invoices/invoice-preview'
 import { createClient } from '@/lib/supabase/client'
 
 type InvoiceItem = {
+  id: string
   description: string
   quantity: number
   unit_price: number
@@ -63,7 +64,7 @@ export default function NewInvoicePage() {
     invoice_number: '',
     title: '',
     issue_date: new Date().toISOString().split('T')[0],
-    items: [{ description: '', quantity: 1, unit_price: 0, amount: 0 }],
+    items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unit_price: 0, amount: 0 }],
   })
 
   useEffect(() => {
@@ -234,7 +235,7 @@ export default function NewInvoicePage() {
               title: '',
               issue_date: new Date().toISOString().split('T')[0],
               status: 'pending',
-              items: [{ description: '', quantity: 1, unit_price: 0, amount: 0 }],
+              items: [{ id: crypto.randomUUID(), description: '', quantity: 1, unit_price: 0, amount: 0 }],
             }}
             onSubmit={handleSubmit}
             onChange={handleFormChange}
