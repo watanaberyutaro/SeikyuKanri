@@ -23,7 +23,7 @@ export default async function LandingPage() {
               <Sparkles className="h-4 w-4 text-[#90cd76] absolute -top-1 -right-1" />
             </div>
             <span className="text-lg md:text-2xl font-bold bg-gradient-to-r from-[#2c3744] via-[#2c3744] to-[#90cd76] bg-clip-text text-transparent">
-              請求書管理システム
+              EnT
             </span>
           </div>
           <div className="flex gap-2 md:gap-3">
@@ -68,18 +68,18 @@ export default async function LandingPage() {
 
             {/* メインコピー */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-tight">
-              <span className="block">請求業務を</span>
+              <span className="block">効率的な経理業務の</span>
               <span className="block bg-gradient-to-r from-[#2c3744] via-[#90cd76] to-[#2c3744] bg-clip-text text-transparent animate-gradient">
-                劇的に効率化
+                入口（EnTrance）
               </span>
-              <span className="block text-3xl sm:text-4xl md:text-5xl mt-2">する時代へ</span>
+              <span className="block text-3xl sm:text-4xl md:text-5xl mt-2">へようこそ</span>
             </h1>
 
             {/* サブコピー */}
             <p className="text-lg sm:text-xl md:text-2xl text-[#2c3744]/70 max-w-3xl mx-auto leading-relaxed">
-              見積書・請求書発行から会計処理まで、すべてを一元管理。
+              請求書作成から会計処理まで、楽しく効率的に。
               <br className="hidden md:block" />
-              <span className="font-semibold text-[#2c3744]">月々の経理作業時間を最大80%削減</span>できます。
+              <span className="font-semibold text-[#2c3744]">EnT</span>は、感動体験を届ける経理システムです。
             </p>
 
             {/* 統計数字 */}
@@ -126,6 +126,80 @@ export default async function LandingPage() {
               ✓ クレジットカード不要  ✓ いつでも解約可能  ✓ 初期費用0円
             </p>
           </div>
+        </div>
+      </section>
+
+      {/* EnTの3つの意味 */}
+      <section className="container mx-auto px-4 py-16 md:py-24">
+        <div className="text-center mb-12 md:mb-16">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-[#2c3744] to-[#90cd76] bg-clip-text text-transparent">
+              EnT
+            </span>
+            に込めた想い
+          </h2>
+          <p className="text-lg md:text-xl text-[#2c3744]/70 max-w-2xl mx-auto">
+            3つの意味が、貴社のビジネスを次のステージへと導きます
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <Card className="border-2 hover:border-[#2c3744] hover:shadow-2xl transition-all duration-300 group">
+            <CardContent className="pt-8 pb-6">
+              <div className="rounded-2xl bg-gradient-to-br from-[#2c3744] to-[#2c3744] w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <ArrowRight className="h-8 w-8 text-[#fffff8]" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-[#2c3744]">
+                EnTrance
+              </h3>
+              <p className="text-lg font-semibold text-[#90cd76] mb-3">
+                入口
+              </p>
+              <p className="text-[#2c3744]/70 leading-relaxed">
+                貴社の効率的な経理業務への入口となります。
+                <br />
+                EnTから始まる、業務改革の第一歩。
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 hover:border-[#90cd76] hover:shadow-2xl transition-all duration-300 group">
+            <CardContent className="pt-8 pb-6">
+              <div className="rounded-2xl bg-gradient-to-br from-[#90cd76] to-[#90cd76] w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Sparkles className="h-8 w-8 text-[#fffff8]" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-[#90cd76]">
+                EnchanT
+              </h3>
+              <p className="text-lg font-semibold text-[#90cd76] mb-3">
+                魔法をかける
+              </p>
+              <p className="text-[#2c3744]/70 leading-relaxed">
+                煩雑な経理業務に魔法をかけ、組織を強化します。
+                <br />
+                業務効率化だけでなく、新たな価値を創造。
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="border-2 hover:border-[#c94826] hover:shadow-2xl transition-all duration-300 group">
+            <CardContent className="pt-8 pb-6">
+              <div className="rounded-2xl bg-gradient-to-br from-[#c94826] to-[#c94826] w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg">
+                <Star className="h-8 w-8 text-[#fffff8]" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 text-[#c94826]">
+                EnTertainment
+              </h3>
+              <p className="text-lg font-semibold text-[#c94826] mb-3">
+                楽しみと感動を
+              </p>
+              <p className="text-[#2c3744]/70 leading-relaxed">
+                経理業務を楽しく、やりがいのあるものに変えていきます。
+                <br />
+                ゲーミフィケーションで、モチベーションアップ。
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </section>
 
@@ -386,10 +460,10 @@ export default async function LandingPage() {
               今すぐ始めて、<br />
               <span className="text-[#90cd76]">経理業務を革新</span>しましょう
             </h2>
-            <p className="text-lg sm:text-xl md:text-2xl text-[#2c3744] max-w-2xl mx-auto">
-              14日間無料トライアル実施中
+            <p className="text-lg sm:text-xl md:text-2xl text-[#fffff8]/90 max-w-2xl mx-auto">
+              効率的な経理業務への入口として、まずはEnTから。
               <br />
-              クレジットカード登録不要・いつでも解約可能
+              楽しみと感動を届ける経理システムを、今すぐ体験してください。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6 max-w-md sm:max-w-none mx-auto">
               <Link href="/apply" className="w-full sm:w-auto">
@@ -425,8 +499,8 @@ export default async function LandingPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Receipt className="h-6 w-6 text-[#2c3744]" />
-                <span className="text-[#fffff8] font-bold">請求書管理システム</span>
+                <Receipt className="h-6 w-6 text-[#90cd76]" />
+                <span className="text-[#fffff8] font-bold">EnT</span>
               </div>
               <p className="text-sm leading-relaxed">
                 中小企業の経理業務を革新する、次世代クラウドシステム
@@ -457,8 +531,8 @@ export default async function LandingPage() {
               </ul>
             </div>
           </div>
-          <div className="border-t border-[#2c3744]/80 pt-8 text-center text-sm">
-            <p>&copy; 2025 請求書管理システム. All rights reserved.</p>
+          <div className="border-t border-[#fffff8]/20 pt-8 text-center text-sm">
+            <p>&copy; 2025 EnT. All rights reserved.</p>
           </div>
         </div>
       </footer>

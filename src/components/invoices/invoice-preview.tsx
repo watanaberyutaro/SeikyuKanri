@@ -74,13 +74,13 @@ export function InvoicePreview({
 
   return (
     <Card className="shadow-lg">
-      <CardContent className="p-8 bg-white">
+      <CardContent className="p-4 bg-white">
         {/* ヘッダー */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-center mb-6">請求書</h2>
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold text-center mb-3">請求書</h2>
 
           {/* 請求先情報と自社情報を横に並べる */}
-          <div className="flex justify-between mb-6">
+          <div className="flex justify-between mb-3">
             {/* 請求先情報（左側） */}
             <div className="flex-1">
               {companyInfo ? (
@@ -157,7 +157,7 @@ export function InvoicePreview({
           </div>
 
           {/* 請求書情報 */}
-          <div className="border-t border-b py-4 mb-6">
+          <div className="border-t border-b py-3 mb-3">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
                 <span className="text-muted-foreground">請求書番号:</span>
@@ -194,7 +194,7 @@ export function InvoicePreview({
 
           {/* 件名 */}
           {title && (
-            <div className="mb-6">
+            <div className="mb-3">
               <div className="text-sm text-muted-foreground mb-1">件名</div>
               <div className="font-medium">{title}</div>
             </div>
@@ -202,7 +202,7 @@ export function InvoicePreview({
         </div>
 
         {/* 明細テーブル */}
-        <div className="mb-6 overflow-x-auto">
+        <div className="mb-4 overflow-x-auto">
           <table className="w-full border-collapse border text-xs">
             <thead>
               <tr className="bg-muted">
@@ -264,7 +264,7 @@ export function InvoicePreview({
         </div>
 
         {/* 合計金額 */}
-        <div className="flex justify-end mb-6">
+        <div className="flex justify-end mb-4">
           <div className="w-80">
             <div className="flex justify-between py-2 border-b">
               <span className="text-sm text-muted-foreground">小計</span>

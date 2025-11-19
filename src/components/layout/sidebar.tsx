@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { signout } from '@/app/(auth)/actions'
-import { LayoutDashboard, Building2, FileText, Receipt, LogOut, Shield, DollarSign, TrendingUp, Calculator, ChevronDown, ChevronRight, Briefcase, BookOpen, Settings, BarChart3, PieChart, ClipboardCheck, Wallet, Plus, CreditCard, Package, FileSearch, ClipboardList, Menu, X, Upload, Link as LinkIcon } from 'lucide-react'
+import { LayoutDashboard, Building2, FileText, Receipt, LogOut, Shield, DollarSign, TrendingUp, Calculator, ChevronDown, ChevronRight, Briefcase, BookOpen, Settings, BarChart3, PieChart, ClipboardCheck, Wallet, Plus, CreditCard, Package, FileSearch, ClipboardList, Menu, X, Upload, Link as LinkIcon, PanelLeftClose, PanelLeftOpen } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useSidebar } from './sidebar-context'
 
 // Feature flags
 const arFeatureEnabled = process.env.NEXT_PUBLIC_FEATURE_AR_MANAGEMENT === '1'
@@ -144,6 +145,7 @@ export function Sidebar() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [expandedSections, setExpandedSections] = useState<string[]>(['accounting-operations', 'accounting-core'])
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { collapsed, toggleCollapsed } = useSidebar()
 
   useEffect(() => {
     async function fetchCompanyName() {
@@ -214,19 +216,48 @@ export function Sidebar() {
       )}
 
       {/* サイドバー */}
-      <aside className={`fixed left-0 top-0 bottom-0 w-64 bg-white border-r shadow-sm flex flex-col z-40 transition-transform duration-300 ease-in-out ${
+      <aside className={`fixed left-0 top-0 bottom-0 ${collapsed ? 'w-16' : 'w-64'} bg-white border-r shadow-sm flex flex-col z-40 transition-all duration-300 ease-in-out ${
         mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
       }`}>
         {/* ロゴエリア */}
-        <div className="p-6 border-b">
-          <Link
-            href="/dashboard"
-            className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            <Receipt className="h-6 w-6 text-primary" />
-            請求書管理
-          </Link>
+        <div className="p-4 border-b">
+          {collapsed ? (
+            <div className="flex flex-col items-center gap-2">
+              <Link
+                href="/dashboard"
+                className="text-primary"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Receipt className="h-6 w-6" />
+              </Link>
+              <button
+                onClick={toggleCollapsed}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+                title="サイドバーを展開"
+              >
+                <PanelLeftOpen className="h-4 w-4" />
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Receipt className="h-6 w-6 text-primary" />
+                請求書管理
+              </Link>
+              <button
+                onClick={toggleCollapsed}
+                className="mt-2 w-full flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                title="サイドバーを折りたたむ"
+              >
+                <PanelLeftClose className="h-4 w-4" />
+                <span>折りたたむ</span>
+              </button>
+            </>
+          )}
         </div>
 
       {/* ナビゲーションエリア */}
@@ -246,15 +277,16 @@ export function Sidebar() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                      className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-3 rounded-lg text-sm font-medium transition-all ${
                         isActive
                           ? 'bg-primary text-primary-foreground shadow-sm'
                           : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
                       }`}
                       onClick={() => setMobileMenuOpen(false)}
+                      title={collapsed ? item.name : undefined}
                     >
                       <Icon className="h-5 w-5" />
-                      {item.name}
+                      {!collapsed && item.name}
                     </Link>
                   )
                 })
@@ -263,6 +295,31 @@ export function Sidebar() {
               // 階層構造のあるセクション（経理・会計）
               const isExpanded = expandedSections.includes(section.section)
               const SectionIcon = section.icon
+
+              if (collapsed) {
+                // 折りたたみ時は全てのサブアイテムをフラットに表示
+                return section.subsections?.map((subsection) =>
+                  subsection.items.map((item) => {
+                    const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
+                    const Icon = item.icon
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`flex items-center justify-center px-2 py-3 rounded-lg text-sm font-medium transition-all ${
+                          isActive
+                            ? 'bg-primary text-primary-foreground shadow-sm'
+                            : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                        }`}
+                        onClick={() => setMobileMenuOpen(false)}
+                        title={item.name}
+                      >
+                        <Icon className="h-5 w-5" />
+                      </Link>
+                    )
+                  })
+                )
+              }
 
               return (
                 <div key={section.section} className="space-y-1">
@@ -323,27 +380,29 @@ export function Sidebar() {
           <div className="space-y-1">
             <Link
               href="/admin/applications"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+              className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-3 rounded-lg text-sm font-medium transition-all ${
                 pathname === '/admin/applications'
                   ? 'bg-amber-500 text-white shadow-sm'
                   : 'text-amber-600 hover:bg-amber-50 border border-amber-200'
               }`}
               onClick={() => setMobileMenuOpen(false)}
+              title={collapsed ? '申請管理' : undefined}
             >
               <ClipboardCheck className="h-5 w-5" />
-              申請管理
+              {!collapsed && '申請管理'}
             </Link>
             <Link
               href="/admin/tenants"
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+              className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-3 rounded-lg text-sm font-medium transition-all ${
                 pathname === '/admin/tenants'
                   ? 'bg-amber-500 text-white shadow-sm'
                   : 'text-amber-600 hover:bg-amber-50 border border-amber-200'
               }`}
               onClick={() => setMobileMenuOpen(false)}
+              title={collapsed ? '企業コード管理' : undefined}
             >
               <Shield className="h-5 w-5" />
-              企業コード管理
+              {!collapsed && '企業コード管理'}
             </Link>
           </div>
         )}
@@ -351,22 +410,32 @@ export function Sidebar() {
 
       {/* フッターエリア */}
       <div className="p-4 border-t space-y-3">
-        {companyName && !isAdmin && (
+        {companyName && !isAdmin && !collapsed && (
           <div className="flex items-center gap-2 px-3 py-2 bg-primary/10 rounded-lg border border-primary/20">
             <Building2 className="h-4 w-4 text-primary flex-shrink-0" />
             <span className="text-sm font-medium text-primary truncate">{companyName}</span>
           </div>
         )}
-        {isAdmin && (
+        {companyName && !isAdmin && collapsed && (
+          <div className="flex justify-center px-2 py-2 bg-primary/10 rounded-lg border border-primary/20" title={companyName}>
+            <Building2 className="h-4 w-4 text-primary" />
+          </div>
+        )}
+        {isAdmin && !collapsed && (
           <div className="flex items-center gap-2 px-3 py-2 bg-amber-500/10 rounded-lg border border-amber-200">
             <Shield className="h-4 w-4 text-amber-600 flex-shrink-0" />
             <span className="text-sm font-medium text-amber-600">システム管理者</span>
           </div>
         )}
+        {isAdmin && collapsed && (
+          <div className="flex justify-center px-2 py-2 bg-amber-500/10 rounded-lg border border-amber-200" title="システム管理者">
+            <Shield className="h-4 w-4 text-amber-600" />
+          </div>
+        )}
         <form action={signout}>
-          <Button type="submit" variant="outline" size="sm" className="w-full gap-2">
+          <Button type="submit" variant="outline" size="sm" className={`w-full ${collapsed ? 'px-2' : 'gap-2'}`} title={collapsed ? 'ログアウト' : undefined}>
             <LogOut className="h-4 w-4" />
-            ログアウト
+            {!collapsed && 'ログアウト'}
           </Button>
         </form>
       </div>

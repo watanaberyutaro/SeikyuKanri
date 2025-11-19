@@ -94,45 +94,87 @@ function SortableQuoteItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="space-y-2"
+      className="border rounded-lg p-4 bg-white space-y-3"
     >
-      <div className="flex gap-2 items-start">
+      <div className="flex items-center gap-2 mb-2">
         {/* Drag Handle */}
         <button
           type="button"
-          className="cursor-grab active:cursor-grabbing mt-2 text-gray-400 hover:text-gray-600"
+          className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600"
           {...attributes}
           {...listeners}
         >
           <GripVertical className="w-5 h-5" />
         </button>
-
-        {/* 摘要 */}
-        <div className="flex-1 space-y-2">
-          <Input
-            placeholder="摘要"
-            value={item.description}
-            onChange={(e) => onUpdate(item.id, 'description', e.target.value)}
+        <span className="text-sm font-medium text-gray-700">明細項目</span>
+        <div className="ml-auto flex gap-2">
+          {/* Duplicate Button */}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onDuplicate(item.id)}
             disabled={loading}
-          />
+            title="この項目を複製"
+          >
+            <Copy className="w-4 h-4" />
+          </Button>
+          {/* Delete Button */}
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={() => onRemove(item.id)}
+            disabled={loading || !canRemove}
+          >
+            削除
+          </Button>
         </div>
+      </div>
 
+      {/* 摘要 */}
+      <div className="space-y-1">
+        <Label className="text-sm font-medium">摘要</Label>
+        <Input
+          placeholder="品目・サービス内容を入力"
+          value={item.description}
+          onChange={(e) => onUpdate(item.id, 'description', e.target.value)}
+          disabled={loading}
+        />
+      </div>
+
+      {/* 2列グリッド */}
+      <div className="grid grid-cols-2 gap-3">
         {/* 取引日 */}
-        <div className="w-36 space-y-2">
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">取引日</Label>
           <Input
             type="date"
-            placeholder="取引日"
             value={item.transaction_date || ''}
             onChange={(e) => onUpdate(item.id, 'transaction_date', e.target.value)}
             disabled={loading}
           />
         </div>
 
+        {/* 単位 */}
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">単位</Label>
+          <Input
+            placeholder="時間、個、式など"
+            value={item.unit || ''}
+            onChange={(e) => onUpdate(item.id, 'unit', e.target.value)}
+            disabled={loading}
+          />
+        </div>
+      </div>
+
+      {/* 3列グリッド */}
+      <div className="grid grid-cols-3 gap-3">
         {/* 数量 */}
-        <div className="w-20 space-y-2">
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">数量</Label>
           <Input
             type="number"
-            placeholder="数量"
             value={item.quantity}
             onChange={(e) => onUpdate(item.id, 'quantity', Number(e.target.value))}
             disabled={loading}
@@ -141,21 +183,11 @@ function SortableQuoteItem({
           />
         </div>
 
-        {/* 単位 */}
-        <div className="w-20 space-y-2">
-          <Input
-            placeholder="単位"
-            value={item.unit || ''}
-            onChange={(e) => onUpdate(item.id, 'unit', e.target.value)}
-            disabled={loading}
-          />
-        </div>
-
         {/* 単価 */}
-        <div className="w-28 space-y-2">
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">単価</Label>
           <Input
             type="number"
-            placeholder="単価"
             value={item.unit_price}
             onChange={(e) => onUpdate(item.id, 'unit_price', Number(e.target.value))}
             disabled={loading}
@@ -163,15 +195,25 @@ function SortableQuoteItem({
           />
         </div>
 
+        {/* 金額 */}
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">金額</Label>
+          <Input value={`¥${item.amount.toLocaleString()}`} disabled className="bg-gray-50" />
+        </div>
+      </div>
+
+      {/* 2列グリッド */}
+      <div className="grid grid-cols-2 gap-3">
         {/* 税率 */}
-        <div className="w-32 space-y-2">
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">税率</Label>
           <Select
             value={item.tax_rate_id}
             onValueChange={(value) => onUpdate(item.id, 'tax_rate_id', value)}
             disabled={loading}
           >
             <SelectTrigger>
-              <SelectValue placeholder="税率" />
+              <SelectValue placeholder="税率を選択" />
             </SelectTrigger>
             <SelectContent>
               {taxRates.map((taxRate) => (
@@ -184,10 +226,10 @@ function SortableQuoteItem({
         </div>
 
         {/* 源泉徴収 */}
-        <div className="w-24 space-y-2">
+        <div className="space-y-1">
+          <Label className="text-sm font-medium">源泉徴収率 (%)</Label>
           <Input
             type="number"
-            placeholder="源泉%"
             value={item.withholding_tax_rate || 0}
             onChange={(e) => onUpdate(item.id, 'withholding_tax_rate', Number(e.target.value))}
             disabled={loading}
@@ -196,34 +238,6 @@ function SortableQuoteItem({
             step="0.01"
           />
         </div>
-
-        {/* 金額 */}
-        <div className="w-28 space-y-2">
-          <Input value={`¥${item.amount.toLocaleString()}`} disabled />
-        </div>
-
-        {/* Duplicate Button */}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => onDuplicate(item.id)}
-          disabled={loading}
-          title="この項目を複製"
-        >
-          <Copy className="w-4 h-4" />
-        </Button>
-
-        {/* Delete Button */}
-        <Button
-          type="button"
-          variant="destructive"
-          size="sm"
-          onClick={() => onRemove(item.id)}
-          disabled={loading || !canRemove}
-        >
-          削除
-        </Button>
       </div>
     </div>
   )

@@ -94,83 +94,87 @@ function SortableInvoiceItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="space-y-2"
+      className="border rounded-lg p-3 bg-white"
     >
-      <div className="flex gap-2 items-start">
+      <div className="flex items-center gap-2">
         {/* Drag Handle */}
         <button
           type="button"
-          className="cursor-grab active:cursor-grabbing mt-2 text-gray-400 hover:text-gray-600"
+          className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 flex-shrink-0"
           {...attributes}
           {...listeners}
         >
-          <GripVertical className="w-5 h-5" />
+          <GripVertical className="w-4 h-4" />
         </button>
 
         {/* 摘要 */}
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 min-w-[200px]">
           <Input
             placeholder="摘要"
             value={item.description}
             onChange={(e) => onUpdate(item.id, 'description', e.target.value)}
             disabled={loading}
+            className="h-9"
           />
         </div>
 
         {/* 取引日 */}
-        <div className="w-36 space-y-2">
+        <div className="w-36">
           <Input
             type="date"
-            placeholder="取引日"
             value={item.transaction_date || ''}
             onChange={(e) => onUpdate(item.id, 'transaction_date', e.target.value)}
             disabled={loading}
+            className="h-9"
           />
         </div>
 
         {/* 数量 */}
-        <div className="w-20 space-y-2">
+        <div className="w-20">
           <Input
             type="number"
-            placeholder="数量"
             value={item.quantity}
             onChange={(e) => onUpdate(item.id, 'quantity', Number(e.target.value))}
             disabled={loading}
             min="0"
             step="0.01"
+            placeholder="数量"
+            className="h-9"
           />
         </div>
 
         {/* 単位 */}
-        <div className="w-20 space-y-2">
+        <div className="w-20">
           <Input
             placeholder="単位"
             value={item.unit || ''}
             onChange={(e) => onUpdate(item.id, 'unit', e.target.value)}
             disabled={loading}
+            className="h-9"
           />
         </div>
 
         {/* 単価 */}
-        <div className="w-28 space-y-2">
+        <div className="w-28">
           <Input
             type="number"
-            placeholder="単価"
             value={item.unit_price}
             onChange={(e) => onUpdate(item.id, 'unit_price', Number(e.target.value))}
             disabled={loading}
             min="0"
+            placeholder="単価"
+            className="h-9"
           />
         </div>
 
         {/* 税率 */}
-        <div className="w-32 space-y-2">
+        <div className="w-28">
           <Select
             value={item.tax_rate_id}
             onValueChange={(value) => onUpdate(item.id, 'tax_rate_id', value)}
             disabled={loading}
           >
-            <SelectTrigger>
+            <SelectTrigger className="h-9">
               <SelectValue placeholder="税率" />
             </SelectTrigger>
             <SelectContent>
@@ -184,46 +188,55 @@ function SortableInvoiceItem({
         </div>
 
         {/* 源泉徴収 */}
-        <div className="w-24 space-y-2">
+        <div className="w-24">
           <Input
             type="number"
-            placeholder="源泉%"
             value={item.withholding_tax_rate || 0}
             onChange={(e) => onUpdate(item.id, 'withholding_tax_rate', Number(e.target.value))}
             disabled={loading}
             min="0"
             max="100"
             step="0.01"
+            placeholder="源泉%"
+            className="h-9"
           />
         </div>
 
         {/* 金額 */}
-        <div className="w-28 space-y-2">
-          <Input value={`¥${item.amount.toLocaleString()}`} disabled />
+        <div className="w-32">
+          <Input
+            value={`¥${item.amount.toLocaleString()}`}
+            disabled
+            className="bg-gray-50 h-9"
+          />
         </div>
 
-        {/* Duplicate Button */}
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => onDuplicate(item.id)}
-          disabled={loading}
-          title="この項目を複製"
-        >
-          <Copy className="w-4 h-4" />
-        </Button>
-
-        {/* Delete Button */}
-        <Button
-          type="button"
-          variant="destructive"
-          size="sm"
-          onClick={() => onRemove(item.id)}
-          disabled={loading || !canRemove}
-        >
-          削除
-        </Button>
+        {/* Action Buttons */}
+        <div className="flex gap-1 flex-shrink-0">
+          {/* Duplicate Button */}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => onDuplicate(item.id)}
+            disabled={loading}
+            title="複製"
+            className="h-9 w-9 p-0"
+          >
+            <Copy className="w-4 h-4" />
+          </Button>
+          {/* Delete Button */}
+          <Button
+            type="button"
+            variant="destructive"
+            size="sm"
+            onClick={() => onRemove(item.id)}
+            disabled={loading || !canRemove}
+            className="h-9 px-3"
+          >
+            削除
+          </Button>
+        </div>
       </div>
     </div>
   )

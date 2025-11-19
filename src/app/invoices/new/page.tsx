@@ -224,9 +224,9 @@ export default function NewInvoicePage() {
       )}
 
       {/* 2カラムレイアウト */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="flex flex-col lg:flex-row gap-6 overflow-hidden">
         {/* 左側: フォーム */}
-        <div>
+        <div className="flex-1 min-w-0">
           <InvoiceForm
             companies={companies.map(c => ({ id: c.id, name: c.name }))}
             initialData={{
@@ -245,12 +245,12 @@ export default function NewInvoicePage() {
         </div>
 
         {/* 右側: プレビュー */}
-        <div className="lg:sticky lg:top-6 lg:self-start">
+        <div className="lg:sticky lg:top-6 lg:self-start lg:w-[40%] flex-shrink-0">
           <div className="mb-3">
             <h2 className="text-lg font-semibold text-gray-900">プレビュー</h2>
             <p className="text-sm text-gray-600">入力内容がリアルタイムで反映されます</p>
           </div>
-          <div className="origin-top scale-75">
+          <div className="origin-top scale-[0.55] overflow-x-auto">
             <InvoicePreview
               tenantInfo={tenantInfo}
               companyInfo={companyInfo}
