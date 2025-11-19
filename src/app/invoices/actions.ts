@@ -21,9 +21,13 @@ type InvoiceFormData = {
   terms?: string
   items: Array<{
     description: string
+    transaction_date?: string
     quantity: number
+    unit?: string
     unit_price: number
     amount: number
+    tax_rate_id?: string
+    withholding_tax_rate?: number
   }>
 }
 
@@ -80,9 +84,13 @@ export async function createInvoice(data: InvoiceFormData) {
   const items = data.items.map((item, index) => ({
     invoice_id: invoice.id,
     description: item.description,
+    transaction_date: item.transaction_date || null,
     quantity: item.quantity,
+    unit: item.unit || null,
     unit_price: item.unit_price,
     amount: item.amount,
+    tax_rate_id: item.tax_rate_id || null,
+    withholding_tax_rate: item.withholding_tax_rate || 0,
     sort_order: index,
   }))
 
@@ -148,9 +156,13 @@ export async function updateInvoice(id: string, data: InvoiceFormData) {
   const items = data.items.map((item, index) => ({
     invoice_id: id,
     description: item.description,
+    transaction_date: item.transaction_date || null,
     quantity: item.quantity,
+    unit: item.unit || null,
     unit_price: item.unit_price,
     amount: item.amount,
+    tax_rate_id: item.tax_rate_id || null,
+    withholding_tax_rate: item.withholding_tax_rate || 0,
     sort_order: index,
   }))
 

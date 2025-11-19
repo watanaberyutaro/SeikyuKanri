@@ -4,9 +4,13 @@ import { Card, CardContent } from '@/components/ui/card'
 
 type InvoiceItem = {
   description: string
+  transaction_date?: string
   quantity: number
+  unit?: string
   unit_price: number
   amount: number
+  tax_rate_id?: string
+  withholding_tax_rate?: number
 }
 
 type TenantInfo = {
@@ -198,14 +202,18 @@ export function InvoicePreview({
         </div>
 
         {/* 明細テーブル */}
-        <div className="mb-6">
-          <table className="w-full border-collapse border">
+        <div className="mb-6 overflow-x-auto">
+          <table className="w-full border-collapse border text-xs">
             <thead>
               <tr className="bg-muted">
-                <th className="border p-2 text-left text-sm font-medium">品目・内容</th>
-                <th className="border p-2 text-center text-sm font-medium w-20">数量</th>
-                <th className="border p-2 text-right text-sm font-medium w-28">単価</th>
-                <th className="border p-2 text-right text-sm font-medium w-32">金額</th>
+                <th className="border p-2 text-left font-medium">摘要</th>
+                <th className="border p-2 text-center font-medium w-24">取引日</th>
+                <th className="border p-2 text-center font-medium w-16">数量</th>
+                <th className="border p-2 text-center font-medium w-16">単位</th>
+                <th className="border p-2 text-right font-medium w-24">単価</th>
+                <th className="border p-2 text-center font-medium w-20">税率</th>
+                <th className="border p-2 text-center font-medium w-20">源泉徴収</th>
+                <th className="border p-2 text-right font-medium w-28">金額</th>
               </tr>
             </thead>
             <tbody>
@@ -214,21 +222,39 @@ export function InvoicePreview({
                   .filter((item) => item.description)
                   .map((item, index) => (
                     <tr key={index}>
-                      <td className="border p-2 text-sm">{item.description}</td>
-                      <td className="border p-2 text-center text-sm">
+                      <td className="border p-2">{item.description}</td>
+                      <td className="border p-2 text-center">
+                        {item.transaction_date
+                          ? new Date(item.transaction_date).toLocaleDateString('ja-JP', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                            })
+                          : '-'}
+                      </td>
+                      <td className="border p-2 text-center">
                         {item.quantity}
                       </td>
-                      <td className="border p-2 text-right text-sm font-mono">
+                      <td className="border p-2 text-center">
+                        {item.unit || '-'}
+                      </td>
+                      <td className="border p-2 text-right font-mono">
                         ¥{item.unit_price.toLocaleString()}
                       </td>
-                      <td className="border p-2 text-right text-sm font-mono">
+                      <td className="border p-2 text-center">
+                        {item.tax_rate_id ? '10%' : '-'}
+                      </td>
+                      <td className="border p-2 text-center">
+                        {item.withholding_tax_rate ? `${item.withholding_tax_rate}%` : '-'}
+                      </td>
+                      <td className="border p-2 text-right font-mono">
                         ¥{item.amount.toLocaleString()}
                       </td>
                     </tr>
                   ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="border p-8 text-center text-muted-foreground italic">
+                  <td colSpan={8} className="border p-8 text-center text-muted-foreground italic">
                     明細を入力してください
                   </td>
                 </tr>

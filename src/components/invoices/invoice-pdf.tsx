@@ -8,9 +8,13 @@ import html2canvas from 'html2canvas'
 type InvoiceItem = {
   id: string
   description: string
+  transaction_date?: string
   quantity: number
+  unit?: string
   unit_price: number
   amount: number
+  tax_rate_id?: string
+  withholding_tax_rate?: number
 }
 
 type Company = {
@@ -198,35 +202,55 @@ export function InvoicePDF({ invoice, items, tenantInfo }: InvoicePDFProps) {
         </div>
 
         <div className="mb-8">
-          <table className="w-full border-collapse border border-black">
+          <table className="w-full border-collapse border border-black text-xs">
             <thead>
               <tr className="bg-gray-100">
-                <th className="border border-black p-2 text-left">品目・内容</th>
-                <th className="border border-black p-2 text-center w-20">数量</th>
-                <th className="border border-black p-2 text-right w-32">単価</th>
-                <th className="border border-black p-2 text-right w-32">金額</th>
+                <th className="border border-black p-1 text-left">摘要</th>
+                <th className="border border-black p-1 text-center w-20">取引日</th>
+                <th className="border border-black p-1 text-center w-12">数量</th>
+                <th className="border border-black p-1 text-center w-12">単位</th>
+                <th className="border border-black p-1 text-right w-20">単価</th>
+                <th className="border border-black p-1 text-center w-12">税率</th>
+                <th className="border border-black p-1 text-center w-16">源泉徴収</th>
+                <th className="border border-black p-1 text-right w-24">金額</th>
               </tr>
             </thead>
             <tbody>
               {items.map((item) => (
                 <tr key={item.id}>
-                  <td className="border border-black p-2">{item.description}</td>
-                  <td className="border border-black p-2 text-center">{item.quantity}</td>
-                  <td className="border border-black p-2 text-right">¥{Number(item.unit_price).toLocaleString()}</td>
-                  <td className="border border-black p-2 text-right">¥{Number(item.amount).toLocaleString()}</td>
+                  <td className="border border-black p-1">{item.description}</td>
+                  <td className="border border-black p-1 text-center">
+                    {item.transaction_date
+                      ? new Date(item.transaction_date).toLocaleDateString('ja-JP', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                        })
+                      : '-'}
+                  </td>
+                  <td className="border border-black p-1 text-center">{item.quantity}</td>
+                  <td className="border border-black p-1 text-center">{item.unit || '-'}</td>
+                  <td className="border border-black p-1 text-right">¥{Number(item.unit_price).toLocaleString()}</td>
+                  <td className="border border-black p-1 text-center">
+                    {item.tax_rate_id ? '10%' : '-'}
+                  </td>
+                  <td className="border border-black p-1 text-center">
+                    {item.withholding_tax_rate ? `${item.withholding_tax_rate}%` : '-'}
+                  </td>
+                  <td className="border border-black p-1 text-right">¥{Number(item.amount).toLocaleString()}</td>
                 </tr>
               ))}
               <tr>
-                <td colSpan={3} className="border border-black p-2 text-right font-bold">小計</td>
-                <td className="border border-black p-2 text-right font-bold">¥{invoice.subtotal.toLocaleString()}</td>
+                <td colSpan={7} className="border border-black p-1 text-right font-bold">小計</td>
+                <td className="border border-black p-1 text-right font-bold">¥{invoice.subtotal.toLocaleString()}</td>
               </tr>
               <tr>
-                <td colSpan={3} className="border border-black p-2 text-right font-bold">消費税(10%)</td>
-                <td className="border border-black p-2 text-right font-bold">¥{invoice.tax_amount.toLocaleString()}</td>
+                <td colSpan={7} className="border border-black p-1 text-right font-bold">消費税(10%)</td>
+                <td className="border border-black p-1 text-right font-bold">¥{invoice.tax_amount.toLocaleString()}</td>
               </tr>
               <tr>
-                <td colSpan={3} className="border border-black p-2 text-right font-bold bg-gray-100">合計</td>
-                <td className="border border-black p-2 text-right font-bold bg-gray-100">¥{invoice.total_amount.toLocaleString()}</td>
+                <td colSpan={7} className="border border-black p-1 text-right font-bold bg-gray-100">合計</td>
+                <td className="border border-black p-1 text-right font-bold bg-gray-100">¥{invoice.total_amount.toLocaleString()}</td>
               </tr>
             </tbody>
           </table>

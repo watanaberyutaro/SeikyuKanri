@@ -42,10 +42,13 @@ import { GripVertical, Copy } from 'lucide-react'
 type QuoteItem = {
   id: string
   description: string
+  transaction_date?: string
   quantity: number
+  unit?: string
   unit_price: number
   amount: number
   tax_rate_id?: string
+  withholding_tax_rate?: number
 }
 
 type TaxRate = {
@@ -104,15 +107,29 @@ function SortableQuoteItem({
           <GripVertical className="w-5 h-5" />
         </button>
 
+        {/* 摘要 */}
         <div className="flex-1 space-y-2">
           <Input
-            placeholder="品目・内容"
+            placeholder="摘要"
             value={item.description}
             onChange={(e) => onUpdate(item.id, 'description', e.target.value)}
             disabled={loading}
           />
         </div>
-        <div className="w-24 space-y-2">
+
+        {/* 取引日 */}
+        <div className="w-36 space-y-2">
+          <Input
+            type="date"
+            placeholder="取引日"
+            value={item.transaction_date || ''}
+            onChange={(e) => onUpdate(item.id, 'transaction_date', e.target.value)}
+            disabled={loading}
+          />
+        </div>
+
+        {/* 数量 */}
+        <div className="w-20 space-y-2">
           <Input
             type="number"
             placeholder="数量"
@@ -123,7 +140,19 @@ function SortableQuoteItem({
             step="0.01"
           />
         </div>
-        <div className="w-32 space-y-2">
+
+        {/* 単位 */}
+        <div className="w-20 space-y-2">
+          <Input
+            placeholder="単位"
+            value={item.unit || ''}
+            onChange={(e) => onUpdate(item.id, 'unit', e.target.value)}
+            disabled={loading}
+          />
+        </div>
+
+        {/* 単価 */}
+        <div className="w-28 space-y-2">
           <Input
             type="number"
             placeholder="単価"
@@ -133,14 +162,16 @@ function SortableQuoteItem({
             min="0"
           />
         </div>
-        <div className="w-40 space-y-2">
+
+        {/* 税率 */}
+        <div className="w-32 space-y-2">
           <Select
             value={item.tax_rate_id}
             onValueChange={(value) => onUpdate(item.id, 'tax_rate_id', value)}
             disabled={loading}
           >
             <SelectTrigger>
-              <SelectValue placeholder="税区分" />
+              <SelectValue placeholder="税率" />
             </SelectTrigger>
             <SelectContent>
               {taxRates.map((taxRate) => (
@@ -151,7 +182,23 @@ function SortableQuoteItem({
             </SelectContent>
           </Select>
         </div>
-        <div className="w-32 space-y-2">
+
+        {/* 源泉徴収 */}
+        <div className="w-24 space-y-2">
+          <Input
+            type="number"
+            placeholder="源泉%"
+            value={item.withholding_tax_rate || 0}
+            onChange={(e) => onUpdate(item.id, 'withholding_tax_rate', Number(e.target.value))}
+            disabled={loading}
+            min="0"
+            max="100"
+            step="0.01"
+          />
+        </div>
+
+        {/* 金額 */}
+        <div className="w-28 space-y-2">
           <Input value={`¥${item.amount.toLocaleString()}`} disabled />
         </div>
 
@@ -218,7 +265,17 @@ export function QuoteForm({ companies, initialData, onSubmit, onCreateCompany, l
     initialData?.items.map(item => ({
       ...item,
       id: item.id || crypto.randomUUID()
-    })) || [{ id: crypto.randomUUID(), description: '', quantity: 1, unit_price: 0, amount: 0 }]
+    })) || [{
+      id: crypto.randomUUID(),
+      description: '',
+      transaction_date: undefined,
+      quantity: 1,
+      unit: undefined,
+      unit_price: 0,
+      amount: 0,
+      tax_rate_id: undefined,
+      withholding_tax_rate: 0
+    }]
   )
 
   const [showNewCompanyDialog, setShowNewCompanyDialog] = useState(false)
@@ -262,10 +319,13 @@ export function QuoteForm({ companies, initialData, onSubmit, onCreateCompany, l
     setItems([...items, {
       id: crypto.randomUUID(),
       description: '',
+      transaction_date: undefined,
       quantity: 1,
+      unit: undefined,
       unit_price: 0,
       amount: 0,
-      tax_rate_id: defaultTaxRate?.id || ''
+      tax_rate_id: defaultTaxRate?.id || '',
+      withholding_tax_rate: 0
     }])
   }
 

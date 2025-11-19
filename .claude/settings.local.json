@@ -29,7 +29,11 @@
       "Bash(ls:*)",
       "Bash(node -e:*)",
       "Bash(node /tmp/replace-gray-colors.js:*)",
-      "Bash(node /tmp/replace-white.js:*)"
+      "Bash(node /tmp/replace-white.js:*)",
+      "Bash(git apply:*)",
+      "Bash(/tmp/code-changes.patch)",
+      "Bash(awk:*)",
+      "Bash(/tmp/filtered-changes.patch)"
     ],
     "deny": [],
     "ask": []
