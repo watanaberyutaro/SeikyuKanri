@@ -242,10 +242,10 @@ export function Sidebar() {
             <>
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent"
+                className="flex items-center gap-2 text-base font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent whitespace-nowrap"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Receipt className="h-6 w-6 text-primary" />
+                <Receipt className="h-5 w-5 text-primary flex-shrink-0" />
                 EnT 請求管理システム
               </Link>
               <button
