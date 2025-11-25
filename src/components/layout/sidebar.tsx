@@ -246,7 +246,7 @@ export function Sidebar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <Receipt className="h-6 w-6 text-primary" />
-                請求書管理
+                EnT
               </Link>
               <button
                 onClick={toggleCollapsed}
